@@ -1,5 +1,10 @@
 ---
+import { getCollection } from 'astro:content';
+
+const songs = await getCollection('songs');
+songs.sort((a, b) => a.data.title.localeCompare(b.data.title));
 ---
+
 <html lang="en">
   <head>
     <meta charset="utf-8" />
@@ -8,6 +13,13 @@
   </head>
   <body>
     <h1>Chords</h1>
-    <p>Minimal Astro project.</p>
+    <ul>
+      {songs.map((song) => (
+        <li>
+          <a href={`/songs/${song.slug}/`}>{song.data.title}</a>
+          {song.data.key && ` – ${song.data.key}`}
+        </li>
+      ))}
+    </ul>
   </body>
 </html>
