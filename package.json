@@ -7,13 +7,18 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "test": "vitest"
   },
   "engines": {
     "node": ">=20.0.0"
   },
   "devDependencies": {
+    "@testing-library/dom": "^10.4.1",
+    "@testing-library/jest-dom": "^6.8.0",
     "astro": "^4.0.0",
-    "typescript": "^5.0.0"
+    "jsdom": "^26.1.0",
+    "typescript": "^5.0.0",
+    "vitest": "^3.2.4"
   }
 }
