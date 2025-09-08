@@ -1,0 +1,39 @@
+---
+import { getEntryBySlug, getCollection } from 'astro:content';
+
+export async function getStaticPaths() {
+  const songs = await getCollection('songs');
+  return songs.map((song) => ({ params: { slug: song.slug } }));
+}
+
+const slug = Astro.params.slug;
+const song = await getEntryBySlug('songs', slug);
+if (!song) {
+  throw new Error(`Song not found: ${slug}`);
+}
+const { Content } = await song.render();
+---
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>{song.data.title}</title>
+  </head>
+  <body>
+    <h1>{song.data.title}</h1>
+    {song.data.key && <p>Key: {song.data.key}</p>}
+    {song.data.bpm && <p>BPM: {song.data.bpm}</p>}
+    {song.data.capo && <p>Capo: {song.data.capo}</p>}
+    <Content />
+    {song.data.pdf && (
+      <>
+        <p><a href={song.data.pdf}>Download PDF</a></p>
+        <object data={song.data.pdf} type="application/pdf" width="100%" height="600">
+          <p>
+            <a href={song.data.pdf}>Download PDF</a>
+          </p>
+        </object>
+      </>
+    )}
+  </body>
+</html>
