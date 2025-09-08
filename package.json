@@ -13,7 +13,6 @@
     "node": ">=20.0.0"
   },
   "devDependencies": {
-    "@astrojs/content": "^0.18.0",
     "astro": "^4.0.0",
     "typescript": "^5.0.0"
   }
