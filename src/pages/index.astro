@@ -3,6 +3,9 @@ import { getCollection } from 'astro:content';
 
 const songs = await getCollection('songs');
 songs.sort((a, b) => a.data.title.localeCompare(b.data.title));
+const base = import.meta.env.BASE_URL.endsWith('/')
+  ? import.meta.env.BASE_URL
+  : `${import.meta.env.BASE_URL}/`;
 ---
 
 <html lang="en">
@@ -16,7 +19,7 @@ songs.sort((a, b) => a.data.title.localeCompare(b.data.title));
     <ul>
       {songs.map((song) => (
         <li>
-          <a href={`${import.meta.env.BASE_URL}songs/${song.slug}/`}>{song.data.title}</a>
+          <a href={`${base}songs/${song.slug}/`}>{song.data.title}</a>
           {song.data.key && ` – ${song.data.key}`}
         </li>
       ))}
