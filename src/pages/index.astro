@@ -16,7 +16,7 @@ songs.sort((a, b) => a.data.title.localeCompare(b.data.title));
     <ul>
       {songs.map((song) => (
         <li>
-          <a href={`/songs/${song.slug}/`}>{song.data.title}</a>
+          <a href={`songs/${song.slug}/`}>{song.data.title}</a>
           {song.data.key && ` – ${song.data.key}`}
         </li>
       ))}
