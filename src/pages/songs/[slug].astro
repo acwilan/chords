@@ -1,5 +1,5 @@
 ---
-import '../../styles/global.css';
+import App from '../../layouts/App.astro';
 import { getEntryBySlug, getCollection } from 'astro:content';
 
 export async function getStaticPaths() {
@@ -22,28 +22,24 @@ const pdf =
     ? song.data.pdf
     : `${base}${song.data.pdf.replace(/^\//, '')}`);
 ---
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width" />
+<App>
+  <Fragment slot="head">
     <title>{song.data.title}</title>
-  </head>
-  <body>
-    <h1>{song.data.title}</h1>
-    {song.data.key && <p>Key: {song.data.key}</p>}
-    {song.data.bpm && <p>BPM: {song.data.bpm}</p>}
-    {song.data.capo && <p>Capo: {song.data.capo}</p>}
-    <Content />
-    {pdf && (
-      <>
-        <p><a href={pdf}>Download PDF</a></p>
-        <object data={pdf} type="application/pdf" width="100%" height="600">
-          <p>
-            <a href={pdf}>Download PDF</a>
-          </p>
-        </object>
-      </>
-    )}
-    <p><a href={`${base}songs/`}>Go back</a></p>
-  </body>
-</html>
+  </Fragment>
+  <h1 class="mb-4 text-2xl font-bold">{song.data.title}</h1>
+  {song.data.key && <p>Key: {song.data.key}</p>}
+  {song.data.bpm && <p>BPM: {song.data.bpm}</p>}
+  {song.data.capo && <p>Capo: {song.data.capo}</p>}
+  <Content />
+  {pdf && (
+    <>
+      <p class="mt-8"><a href={pdf}>Download PDF</a></p>
+      <object data={pdf} type="application/pdf" width="100%" height="600">
+        <p>
+          <a href={pdf}>Download PDF</a>
+        </p>
+      </object>
+    </>
+  )}
+  <p class="mt-8"><a href={`${base}songs/`}>Go back</a></p>
+</App>
