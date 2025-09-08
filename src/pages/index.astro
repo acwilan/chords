@@ -1,5 +1,5 @@
 ---
-import '../styles/global.css';
+import App from '../layouts/App.astro';
 import { getCollection } from 'astro:content';
 
 const songs = await getCollection('songs');
@@ -8,22 +8,17 @@ const base = import.meta.env.BASE_URL.endsWith('/')
   ? import.meta.env.BASE_URL
   : `${import.meta.env.BASE_URL}/`;
 ---
-
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width" />
+<App>
+  <Fragment slot="head">
     <title>Chords</title>
-  </head>
-  <body>
-    <h1>Chords</h1>
-    <ul>
-      {songs.map((song) => (
-        <li>
-          <a href={`${base}songs/${song.slug}/`}>{song.data.title}</a>
-          {song.data.key && ` – ${song.data.key}`}
-        </li>
-      ))}
-    </ul>
-  </body>
-</html>
+  </Fragment>
+  <h1 class="mb-4 text-2xl font-bold">Songs</h1>
+  <ul class="space-y-1">
+    {songs.map((song) => (
+      <li>
+        <a href={`${base}songs/${song.slug}/`}>{song.data.title}</a>
+        {song.data.key && ` – ${song.data.key}`}
+      </li>
+    ))}
+  </ul>
+</App>
