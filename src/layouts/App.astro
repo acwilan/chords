@@ -8,13 +8,17 @@ const base = import.meta.env.BASE_URL.endsWith('/')
 const pathname = Astro.url.pathname;
 const locale = getLocaleFromUrl(pathname, base);
 const t = createT(locale);
-const path = pathname.startsWith(base) ? pathname.slice(base.length) : pathname;
-const pathWithoutLocale = locale === 'en' ? path.replace(/^en\//, '') : path;
+const stripBase = (p: string) => {
+  const normalized = base.endsWith('/') ? base.slice(0, -1) : base;
+  return p.startsWith(normalized) ? p.slice(normalized.length) : p;
+};
+const relative = stripBase(pathname).replace(/^\//, '');
+const pathWithoutLocale = locale === 'en' ? relative.replace(/^en\//, '') : relative;
 const altEs = `${base}${pathWithoutLocale}`;
 const altEn = `${base}en/${pathWithoutLocale}`;
 const year = new Date().getFullYear();
 ---
-<html lang={locale} class="h-full">
+<html lang={locale} data-base={base} class="h-full">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -26,12 +30,15 @@ const year = new Date().getFullYear();
         document.documentElement.classList.add('dark');
       }
       const storedLang = localStorage.getItem('lang');
-      if (storedLang && storedLang !== '{locale}') {
-        const base = '{base}';
-        const path = location.pathname.replace(base, '');
-        const without = '{locale}' === 'en' ? path.replace(/^en\//, '') : path;
-        const url = base + (storedLang === 'en' ? 'en/' : '') + without;
-        location.replace(url);
+      if (storedLang) {
+        const currentLocale = document.documentElement.lang;
+        if (storedLang !== currentLocale) {
+          const base = document.documentElement.dataset.base || '/';
+          const path = location.pathname.replace(base, '');
+          const without = currentLocale === 'en' ? path.replace(/^en\//, '') : path;
+          const url = base + (storedLang === 'en' ? 'en/' : '') + without;
+          location.replace(url);
+        }
       }
     </script>
     <link rel="icon" href={`${base}favicon.svg`} type="image/svg+xml" />
@@ -117,8 +124,8 @@ const year = new Date().getFullYear();
       </div>
     </footer>
     <script is:inline>
-      const base = {JSON.stringify(base)};
-      const locale = {JSON.stringify(locale)};
+      const base = document.documentElement.dataset.base || '/';
+      const locale = document.documentElement.lang;
       document.getElementById('theme-toggle')?.addEventListener('click', () => {
         const isDark = document.documentElement.classList.toggle('dark');
         localStorage.setItem('theme', isDark ? 'dark' : 'light');
