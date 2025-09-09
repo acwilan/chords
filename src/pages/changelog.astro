@@ -1,6 +1,7 @@
 ---
 import App from '../layouts/App.astro';
 import { getLocaleFromUrl, createT } from '../utils/i18n';
+import Changelog from '../../CHANGELOG.md';
 
 const base = import.meta.env.BASE_URL.endsWith('/')
   ? import.meta.env.BASE_URL
@@ -8,7 +9,7 @@ const base = import.meta.env.BASE_URL.endsWith('/')
 const locale = getLocaleFromUrl(Astro.url.pathname, base);
 const t = createT(locale);
 const url = `${base}${locale === 'en' ? 'en/' : ''}changelog/`;
-const description = t('changelog.comingSoon');
+const description = t('changelog.title');
 ---
 <App>
   <Fragment slot="head">
@@ -19,6 +20,5 @@ const description = t('changelog.comingSoon');
     <meta property="og:type" content="website" />
     <meta property="og:url" content={url} />
   </Fragment>
-  <h1>{t('changelog.title')}</h1>
-  <p>{t('changelog.comingSoon')}</p>
+  <Changelog />
 </App>
