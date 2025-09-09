@@ -18,6 +18,9 @@ const year = new Date().getFullYear();
         document.documentElement.classList.add('dark');
       }
     </script>
+    <link rel="icon" href={`${base}favicon.svg`} type="image/svg+xml" />
+    <link rel="manifest" href={`${base}manifest.webmanifest`} />
+    <meta property="og:site_name" content="Chords" />
     <slot name="head" />
   </head>
     <body class="flex min-h-screen flex-col bg-white text-gray-900 dark:bg-gray-900 dark:text-gray-100">
