@@ -5,7 +5,9 @@ import { getLocaleFromUrl, createT } from '../../utils/i18n';
 
 export async function getStaticPaths() {
   const songs = await getCollection('songs');
-  const slugs = Array.from(new Set(songs.map((s) => s.data.slug)));
+  const slugs = Array.from(
+    new Set(songs.map((s) => s.slug.replace(/\.(en|es)$/, '')))
+  );
   return slugs.map((slug) => ({ params: { slug } }));
 }
 
@@ -16,7 +18,9 @@ const locale = getLocaleFromUrl(Astro.url.pathname, base);
 const t = createT(locale);
 const slug = Astro.params.slug;
 const songs = await getCollection('songs');
-const entries = songs.filter((s) => s.data.slug === slug);
+const entries = songs.filter(
+  (s) => s.slug.replace(/\.(en|es)$/, '') === slug
+);
 if (entries.length === 0) {
   throw new Error(`Song not found: ${slug}`);
 }

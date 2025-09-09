@@ -17,7 +17,7 @@ This repository hosts the source code for the chords site.
 
 - Translations live in `src/i18n/*.json`. Add new keys in each locale file.
 - Use the `t(key)` utility from `src/utils/i18n.ts` for UI strings.
-- To localize songs, create one file per language with matching `slug` and `lang` values.
+- To localize songs, create one file per language using the same base filename (e.g., `mi-cancion.es.md`, `mi-cancion.en.md`) and set the `lang` field accordingly.
 
 ## Running locally
 

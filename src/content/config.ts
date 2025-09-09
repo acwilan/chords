@@ -2,7 +2,6 @@ import { defineCollection, z } from 'astro:content';
 
 const songs = defineCollection({
   schema: z.object({
-    slug: z.string(),
     lang: z.enum(['es', 'en']).default('es'),
     title: z.string(),
     key: z.string().optional(),

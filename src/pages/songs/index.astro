@@ -11,11 +11,11 @@ const t = createT(locale);
 const all = await getCollection('songs');
 const map = new Map();
 for (const entry of all) {
-  const slug = entry.data.slug;
+  const baseSlug = entry.slug.replace(/\.(en|es)$/, '');
   const lang = entry.data.lang;
-  const group = map.get(slug) || {};
+  const group = map.get(baseSlug) || {};
   group[lang] = entry;
-  map.set(slug, group);
+  map.set(baseSlug, group);
 }
 const songs = Array.from(map.entries()).map(([slug, langs]) => {
   const entry = langs[locale] || langs.es || langs.en;

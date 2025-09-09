@@ -1,5 +1,4 @@
 ---
-slug: mi-cancion
 lang: es
 title: "Mi Canción"
 key: "Em"
