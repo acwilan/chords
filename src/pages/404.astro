@@ -1,21 +1,30 @@
 ---
 import App from '../layouts/App.astro';
+import { getLocaleFromUrl, createT } from '../utils/i18n';
 const base = import.meta.env.BASE_URL.endsWith('/')
   ? import.meta.env.BASE_URL
   : `${import.meta.env.BASE_URL}/`;
+const locale = getLocaleFromUrl(Astro.url.pathname, base);
+const t = createT(locale);
+const url = `${base}${locale === 'en' ? 'en/' : ''}404/`;
 ---
 <App>
   <Fragment slot="head">
-    <title>Page Not Found</title>
+    <title>{t('404.title')}</title>
+    <meta name="description" content={t('404.message')} />
+    <meta property="og:title" content={t('404.title')} />
+    <meta property="og:description" content={t('404.message')} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={url} />
   </Fragment>
   <section class="not-prose flex min-h-[60vh] flex-col items-center justify-center py-24 text-center">
     <h1 class="text-5xl font-bold">404</h1>
-    <p class="mt-4 text-xl text-gray-600 dark:text-gray-300">Sorry, we couldn't find that page.</p>
+    <p class="mt-4 text-xl text-gray-600 dark:text-gray-300">{t('404.message')}</p>
     <a
-      href={`${base}songs/`}
+      href={`${base}${locale === 'en' ? 'en/' : ''}songs/`}
       class="btn-primary mt-8 px-6 py-3 text-lg"
     >
-      Back to Songs
+      {t('404.backToSongs')}
     </a>
   </section>
 </App>

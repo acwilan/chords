@@ -2,6 +2,7 @@ import { defineCollection, z } from 'astro:content';
 
 const songs = defineCollection({
   schema: z.object({
+    lang: z.enum(['es', 'en']).default('es'),
     title: z.string(),
     key: z.string().optional(),
     bpm: z.number().optional(),
@@ -12,4 +13,3 @@ const songs = defineCollection({
 });
 
 export const collections = { songs };
-

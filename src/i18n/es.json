@@ -1,0 +1,38 @@
+{
+  "site": {
+    "title": "Acordes",
+    "tagline": "Cifras para canciones de adoración"
+  },
+  "nav": {
+    "home": "Inicio",
+    "songs": "Canciones",
+    "changelog": "Registro de cambios"
+  },
+  "home": {
+    "browseSongs": "Ver canciones",
+    "intro": "Cifras en PDF para canciones de adoración"
+  },
+  "songs": {
+    "title": "Canciones",
+    "description": "Buscar y explorar cifras de canciones de adoración",
+    "searchPlaceholder": "Buscar canciones",
+    "tagFilterLabel": "Filtrar por etiqueta",
+    "key": "Tonalidad",
+    "bpm": "BPM",
+    "capo": "Capo",
+    "downloadPdf": "Descargar PDF",
+    "openPdf": "Abrir PDF",
+    "goBack": "Volver",
+    "linkOtherLang": "Ver en {lang}",
+    "chartFor": "Cifra para {title}"
+  },
+  "changelog": {
+    "title": "Registro de cambios",
+    "comingSoon": "Próximamente."
+  },
+  "404": {
+    "title": "Página no encontrada",
+    "message": "Lo sentimos, no encontramos esa página.",
+    "backToSongs": "Volver a canciones"
+  }
+}
