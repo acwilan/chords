@@ -6,7 +6,7 @@ import { getLocaleFromUrl, createT } from '../../utils/i18n';
 export async function getStaticPaths() {
   const songs = await getCollection('songs');
   const slugs = Array.from(
-    new Set(songs.map((s) => s.slug.replace(/\.(en|es)$/, '')))
+    new Set(songs.map((s) => s.id.replace(/(\.(en|es))?\.md$/, '')))
   );
   return slugs.map((slug) => ({ params: { slug } }));
 }
@@ -19,7 +19,7 @@ const t = createT(locale);
 const slug = Astro.params.slug;
 const songs = await getCollection('songs');
 const entries = songs.filter(
-  (s) => s.slug.replace(/\.(en|es)$/, '') === slug
+  (s) => s.id.replace(/(\.(en|es))?\.md$/, '') === slug
 );
 if (entries.length === 0) {
   throw new Error(`Song not found: ${slug}`);
@@ -30,6 +30,7 @@ const otherEntry = entries.find((e) => e.data.lang === otherLocale);
 const otherLink = otherEntry
   ? `${base}${otherLocale === 'en' ? 'en/' : ''}songs/${slug}/`
   : undefined;
+const otherLangName = otherLocale === 'en' ? 'English' : 'Español';
 const { Content } = await song.render();
 const pdf =
   song.data.pdf &&
@@ -71,38 +72,17 @@ const description = t('songs.chartFor', { title: song.data.title });
     {otherLink && (
       <p class="mt-2 text-sm">
         <a href={otherLink} class="underline">
-          {t('songs.linkOtherLang', { lang: otherLocale === 'en' ? 'English' : 'Español' })}
+      {t('songs.linkOtherLang', { lang: otherLangName })}
         </a>
       </p>
     )}
   </header>
   <Content />
   {pdf && (
-    <>
-      <div class="mt-8 flex gap-4">
-        <a
-          href={pdf}
-          download
-          class="btn-primary"
-        >
-          {t('songs.downloadPdf')}
-        </a>
-        <a
-          href={pdf}
-          target="_blank"
-          class="btn-secondary"
-        >
-          {t('songs.openPdf')}
-        </a>
-      </div>
-      <div class="card mt-4 overflow-hidden p-0">
-        <object data={pdf} type="application/pdf" class="h-[80vh] w-full bg-white dark:bg-gray-900">
-          <p>
-            <a href={pdf}>{t('songs.downloadPdf')}</a>
-          </p>
-        </object>
-      </div>
-    </>
+    <div class="mt-8 flex gap-4">
+      <a href={pdf} download class="btn-primary">{t('songs.downloadPdf')}</a>
+      <a href={pdf} target="_blank" class="btn-secondary">{t('songs.openPdf')}</a>
+    </div>
   )}
   <p class="mt-8"><a href={`${base}${locale === 'en' ? 'en/' : ''}songs/`}>{t('songs.goBack')}</a></p>
 </App>

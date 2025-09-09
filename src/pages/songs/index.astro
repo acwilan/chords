@@ -11,7 +11,7 @@ const t = createT(locale);
 const all = await getCollection('songs');
 const map = new Map();
 for (const entry of all) {
-  const baseSlug = entry.slug.replace(/\.(en|es)$/, '');
+  const baseSlug = entry.id.replace(/(\.(en|es))?\.md$/, '');
   const lang = entry.data.lang;
   const group = map.get(baseSlug) || {};
   group[lang] = entry;
@@ -19,7 +19,7 @@ for (const entry of all) {
 }
 const songs = Array.from(map.entries()).map(([slug, langs]) => {
   const entry = langs[locale] || langs.es || langs.en;
-  const linkLocale = langs[locale] ? locale : (langs.es ? 'es' : 'en');
+  const linkLocale = langs[locale] ? locale : langs.es ? 'es' : 'en';
   return { slug, entry, linkLocale };
 });
 songs.sort((a, b) => a.entry.data.title.localeCompare(b.entry.data.title));
