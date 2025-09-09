@@ -25,3 +25,9 @@ This repository hosts the source code for the chords site.
 npm install
 npm run dev
 ```
+
+## Releasing
+
+- Commit using [Conventional Commits](https://www.conventionalcommits.org/) (`feat:`, `fix:`, etc.).
+- Run `npm run release` and then `git push --follow-tags origin main`.
+- The generated `CHANGELOG.md` is published at `/changelog`.

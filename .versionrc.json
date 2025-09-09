@@ -1,0 +1,17 @@
+{
+  "types": [
+    { "type": "feat", "section": "Features" },
+    { "type": "fix", "section": "Bug Fixes" },
+    { "type": "docs", "section": "Documentation" },
+    { "type": "chore", "section": "Chores" },
+    { "type": "refactor", "section": "Refactoring" },
+    { "type": "perf", "section": "Performance" },
+    { "type": "test", "section": "Tests" },
+    { "type": "ci", "section": "CI" },
+    { "type": "build", "section": "Build System" }
+  ],
+  "commitUrlFormat": "https://github.com/acwilan/chords/commit/{{hash}}",
+  "compareUrlFormat": "https://github.com/acwilan/chords/compare/{{previousTag}}...{{currentTag}}",
+  "issueUrlFormat": "https://github.com/acwilan/chords/issues/{{id}}",
+  "userUrlFormat": "https://github.com/{{user}}"
+}

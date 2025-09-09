@@ -27,8 +27,7 @@
     "chartFor": "Chord chart for {title}"
   },
   "changelog": {
-    "title": "Changelog",
-    "comingSoon": "Coming soon."
+    "title": "Changelog"
   },
   "404": {
     "title": "Page Not Found",
