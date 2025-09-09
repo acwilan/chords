@@ -54,20 +54,20 @@ const pdf =
         <a
           href={pdf}
           download
-          class="rounded bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
+          class="rounded bg-blue-600 px-4 py-2 text-white hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600"
         >
           Download PDF
         </a>
         <a
           href={pdf}
           target="_blank"
-          class="rounded bg-gray-600 px-4 py-2 text-white hover:bg-gray-700"
+          class="rounded bg-gray-600 px-4 py-2 text-white hover:bg-gray-700 dark:bg-gray-500 dark:hover:bg-gray-600"
         >
           Open PDF
         </a>
       </div>
-      <div class="mt-4 overflow-hidden rounded border border-gray-200 dark:border-gray-700">
-        <object data={pdf} type="application/pdf" class="h-[80vh] w-full">
+      <div class="mt-4 overflow-hidden rounded border border-gray-200 bg-white dark:border-gray-700 dark:bg-gray-800">
+        <object data={pdf} type="application/pdf" class="h-[80vh] w-full bg-white dark:bg-gray-900">
           <p>
             <a href={pdf}>Download PDF</a>
           </p>
