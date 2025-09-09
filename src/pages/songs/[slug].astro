@@ -49,7 +49,7 @@ const description = `Chord chart for ${song.data.title}`;
     {song.data.tags && (
       <div class="mt-2 flex flex-wrap gap-2">
         {song.data.tags.map((tag) => (
-          <span class="rounded bg-gray-200 px-2 py-1 text-xs dark:bg-gray-700">{tag}</span>
+          <span class="tag-pill">{tag}</span>
         ))}
       </div>
     )}
@@ -61,19 +61,19 @@ const description = `Chord chart for ${song.data.title}`;
         <a
           href={pdf}
           download
-          class="rounded bg-blue-600 px-4 py-2 text-white hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600"
+          class="btn-primary"
         >
           Download PDF
         </a>
         <a
           href={pdf}
           target="_blank"
-          class="rounded bg-gray-600 px-4 py-2 text-white hover:bg-gray-700 dark:bg-gray-500 dark:hover:bg-gray-600"
+          class="btn-secondary"
         >
           Open PDF
         </a>
       </div>
-      <div class="mt-4 overflow-hidden rounded border border-gray-200 bg-white dark:border-gray-700 dark:bg-gray-800">
+      <div class="card mt-4 overflow-hidden p-0">
         <object data={pdf} type="application/pdf" class="h-[80vh] w-full bg-white dark:bg-gray-900">
           <p>
             <a href={pdf}>Download PDF</a>
