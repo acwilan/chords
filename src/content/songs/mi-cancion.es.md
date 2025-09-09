@@ -1,4 +1,6 @@
 ---
+slug: mi-cancion
+lang: es
 title: "Mi Canción"
 key: "Em"
 bpm: 122
@@ -7,4 +9,4 @@ tags: ["worship","spanish","upbeat"]
 pdf: "/charts/Mi-Cancion.pdf"
 ---
 
-This upbeat worship song is a joyful celebration in Spanish.
+Esta enérgica canción de adoración es una celebración alegre en español.

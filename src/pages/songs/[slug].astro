@@ -1,28 +1,39 @@
 ---
 import App from '../../layouts/App.astro';
-import { getEntryBySlug, getCollection } from 'astro:content';
+import { getCollection } from 'astro:content';
+import { getLocaleFromUrl, createT } from '../../utils/i18n';
 
 export async function getStaticPaths() {
   const songs = await getCollection('songs');
-  return songs.map((song) => ({ params: { slug: song.slug } }));
+  const slugs = Array.from(new Set(songs.map((s) => s.data.slug)));
+  return slugs.map((slug) => ({ params: { slug } }));
 }
 
-const slug = Astro.params.slug;
-const song = await getEntryBySlug('songs', slug);
-if (!song) {
-  throw new Error(`Song not found: ${slug}`);
-}
-const { Content } = await song.render();
 const base = import.meta.env.BASE_URL.endsWith('/')
   ? import.meta.env.BASE_URL
   : `${import.meta.env.BASE_URL}/`;
+const locale = getLocaleFromUrl(Astro.url.pathname, base);
+const t = createT(locale);
+const slug = Astro.params.slug;
+const songs = await getCollection('songs');
+const entries = songs.filter((s) => s.data.slug === slug);
+if (entries.length === 0) {
+  throw new Error(`Song not found: ${slug}`);
+}
+const song = entries.find((e) => e.data.lang === locale) || entries[0];
+const otherLocale = locale === 'en' ? 'es' : 'en';
+const otherEntry = entries.find((e) => e.data.lang === otherLocale);
+const otherLink = otherEntry
+  ? `${base}${otherLocale === 'en' ? 'en/' : ''}songs/${slug}/`
+  : undefined;
+const { Content } = await song.render();
 const pdf =
   song.data.pdf &&
   (song.data.pdf.startsWith('http')
     ? song.data.pdf
     : `${base}${song.data.pdf.replace(/^\//, '')}`);
-const url = `${base}songs/${slug}/`;
-const description = `Chord chart for ${song.data.title}`;
+const url = `${base}${locale === 'en' ? 'en/' : ''}songs/${slug}/`;
+const description = t('songs.chartFor', { title: song.data.title });
 ---
 <App>
   <Fragment slot="head">
@@ -37,13 +48,13 @@ const description = `Chord chart for ${song.data.title}`;
     <h1 class="mb-2 text-3xl font-bold">{song.data.title}</h1>
     <div class="flex flex-wrap gap-x-4 gap-y-1 text-sm text-gray-600 dark:text-gray-300">
       {song.data.key && (
-        <span><strong>Key:</strong> {song.data.key}</span>
+        <span><strong>{t('songs.key')}:</strong> {song.data.key}</span>
       )}
       {song.data.bpm && (
-        <span><strong>BPM:</strong> {song.data.bpm}</span>
+        <span><strong>{t('songs.bpm')}:</strong> {song.data.bpm}</span>
       )}
       {song.data.capo && (
-        <span><strong>Capo:</strong> {song.data.capo}</span>
+        <span><strong>{t('songs.capo')}:</strong> {song.data.capo}</span>
       )}
     </div>
     {song.data.tags && (
@@ -52,6 +63,13 @@ const description = `Chord chart for ${song.data.title}`;
           <span class="tag-pill">{tag}</span>
         ))}
       </div>
+    )}
+    {otherLink && (
+      <p class="mt-2 text-sm">
+        <a href={otherLink} class="underline">
+          {t('songs.linkOtherLang', { lang: otherLocale === 'en' ? 'English' : 'Español' })}
+        </a>
+      </p>
     )}
   </header>
   <Content />
@@ -63,24 +81,24 @@ const description = `Chord chart for ${song.data.title}`;
           download
           class="btn-primary"
         >
-          Download PDF
+          {t('songs.downloadPdf')}
         </a>
         <a
           href={pdf}
           target="_blank"
           class="btn-secondary"
         >
-          Open PDF
+          {t('songs.openPdf')}
         </a>
       </div>
       <div class="card mt-4 overflow-hidden p-0">
         <object data={pdf} type="application/pdf" class="h-[80vh] w-full bg-white dark:bg-gray-900">
           <p>
-            <a href={pdf}>Download PDF</a>
+            <a href={pdf}>{t('songs.downloadPdf')}</a>
           </p>
         </object>
       </div>
     </>
   )}
-  <p class="mt-8"><a href={`${base}songs/`}>Go back</a></p>
+  <p class="mt-8"><a href={`${base}${locale === 'en' ? 'en/' : ''}songs/`}>{t('songs.goBack')}</a></p>
 </App>
