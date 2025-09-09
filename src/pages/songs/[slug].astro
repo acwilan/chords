@@ -26,19 +26,53 @@ const pdf =
   <Fragment slot="head">
     <title>{song.data.title}</title>
   </Fragment>
-  <h1>{song.data.title}</h1>
-  {song.data.key && <p>Key: {song.data.key}</p>}
-  {song.data.bpm && <p>BPM: {song.data.bpm}</p>}
-  {song.data.capo && <p>Capo: {song.data.capo}</p>}
+  <header class="mb-8 border-b pb-4">
+    <h1 class="mb-2 text-3xl font-bold">{song.data.title}</h1>
+    <div class="flex flex-wrap gap-x-4 gap-y-1 text-sm text-gray-600 dark:text-gray-300">
+      {song.data.key && (
+        <span><strong>Key:</strong> {song.data.key}</span>
+      )}
+      {song.data.bpm && (
+        <span><strong>BPM:</strong> {song.data.bpm}</span>
+      )}
+      {song.data.capo && (
+        <span><strong>Capo:</strong> {song.data.capo}</span>
+      )}
+    </div>
+    {song.data.tags && (
+      <div class="mt-2 flex flex-wrap gap-2">
+        {song.data.tags.map((tag) => (
+          <span class="rounded bg-gray-200 px-2 py-1 text-xs dark:bg-gray-700">{tag}</span>
+        ))}
+      </div>
+    )}
+  </header>
   <Content />
   {pdf && (
     <>
-      <p class="mt-8"><a href={pdf}>Download PDF</a></p>
-      <object data={pdf} type="application/pdf" width="100%" height="600">
-        <p>
-          <a href={pdf}>Download PDF</a>
-        </p>
-      </object>
+      <div class="mt-8 flex gap-4">
+        <a
+          href={pdf}
+          download
+          class="rounded bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
+        >
+          Download PDF
+        </a>
+        <a
+          href={pdf}
+          target="_blank"
+          class="rounded bg-gray-600 px-4 py-2 text-white hover:bg-gray-700"
+        >
+          Open PDF
+        </a>
+      </div>
+      <div class="mt-4 overflow-hidden rounded border border-gray-200 dark:border-gray-700">
+        <object data={pdf} type="application/pdf" class="h-[80vh] w-full">
+          <p>
+            <a href={pdf}>Download PDF</a>
+          </p>
+        </object>
+      </div>
     </>
   )}
   <p class="mt-8"><a href={`${base}songs/`}>Go back</a></p>
