@@ -10,11 +10,18 @@ const tags = Array.from(
 const base = import.meta.env.BASE_URL.endsWith('/')
   ? import.meta.env.BASE_URL
   : `${import.meta.env.BASE_URL}/`;
+const description = 'Browse and search chord charts for worship songs';
+const url = `${base}songs/`;
 ---
 
 <App>
   <Fragment slot="head">
     <title>Songs</title>
+    <meta name="description" content={description} />
+    <meta property="og:title" content="Songs" />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={url} />
   </Fragment>
   <h1>Songs</h1>
   <label for="song-search" class="sr-only">Search songs</label>

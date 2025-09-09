@@ -21,10 +21,17 @@ const pdf =
   (song.data.pdf.startsWith('http')
     ? song.data.pdf
     : `${base}${song.data.pdf.replace(/^\//, '')}`);
+const url = `${base}songs/${slug}/`;
+const description = `Chord chart for ${song.data.title}`;
 ---
 <App>
   <Fragment slot="head">
     <title>{song.data.title}</title>
+    <meta name="description" content={description} />
+    <meta property="og:title" content={song.data.title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content={url} />
   </Fragment>
   <header class="mb-8 border-b pb-4">
     <h1 class="mb-2 text-3xl font-bold">{song.data.title}</h1>
