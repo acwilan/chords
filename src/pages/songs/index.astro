@@ -164,7 +164,7 @@ const url = `${base}${locale === 'en' ? 'en/' : ''}songs/`;
     {JSON.stringify(artists)}
   </script>
   <script is:inline>
-    const songItems = document.querySelectorAll('#song-list li');
+    const songItems = document.querySelectorAll('#song-list > li');
     const searchInput = document.getElementById('song-search');
     const tagButtons = document.querySelectorAll('#tag-filters button');
     function applyFilters() {
@@ -173,7 +173,7 @@ const url = `${base}${locale === 'en' ? 'en/' : ''}songs/`;
         .filter((btn) => btn.getAttribute('aria-pressed') === 'true')
         .map((btn) => btn.dataset.tag);
       songItems.forEach((item) => {
-        const title = item.dataset.title;
+        const title = item.dataset.title || '';
         const tags = item.dataset.tags ? item.dataset.tags.split(' ') : [];
         const itemArtist = item.dataset.artist || 'Unknown';
         const matchesTitle = title.includes(query);
