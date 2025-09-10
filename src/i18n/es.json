@@ -20,6 +20,8 @@
     "key": "Tonalidad",
     "bpm": "BPM",
     "artist": "Artista",
+    "artists": "Artistas",
+    "clear": "Limpiar",
     "author": "Autor",
     "downloadPdf": "Descargar PDF",
     "openPdf": "Abrir PDF",

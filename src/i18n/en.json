@@ -20,6 +20,8 @@
     "key": "Key",
     "bpm": "BPM",
     "artist": "Artist",
+    "artists": "Artists",
+    "clear": "Clear",
     "author": "Author",
     "downloadPdf": "Download PDF",
     "openPdf": "Open PDF",

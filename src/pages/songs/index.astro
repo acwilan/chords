@@ -49,18 +49,38 @@ const url = `${base}${locale === 'en' ? 'en/' : ''}songs/`;
   <h1>{t('songs.title')}</h1>
   <button
     id="artist-sidebar-toggle"
-    class="mb-4 md:hidden"
+    class="mb-4 flex items-center md:hidden"
     aria-controls="artist-sidebar"
     aria-expanded="false"
     type="button"
   >
-    {t('songs.artist')}
+    {t('songs.artists')}
+    <svg
+      class="ml-2 h-4 w-4 transition-transform"
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke-width="1.5"
+      stroke="currentColor"
+    >
+      <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+    </svg>
   </button>
   <div class="md:flex md:gap-4">
     <aside
       id="artist-sidebar"
       class="mb-4 hidden w-48 shrink-0 md:block"
     >
+      <div class="mb-2 flex items-center justify-between">
+        <h2 class="text-sm font-semibold">{t('songs.artists')}</h2>
+        <button
+          id="artist-clear"
+          type="button"
+          class="text-xs text-gray-600 hover:underline dark:text-gray-400"
+        >
+          {t('songs.clear')}
+        </button>
+      </div>
       <nav aria-label="Artist filters">
         <ul id="artist-filters" class="space-y-2">
           <li>
@@ -68,9 +88,10 @@ const url = `${base}${locale === 'en' ? 'en/' : ''}songs/`;
               type="button"
               data-artist=""
               aria-pressed={initialArtist ? 'false' : 'true'}
-              class="block w-full text-left"
+              class="flex w-full items-center justify-between rounded-full px-3 py-1 text-sm"
             >
-              All ({songs.length})
+              <span>All</span>
+              <span class="text-xs text-gray-600 dark:text-gray-400">{songs.length}</span>
             </button>
           </li>
           {artists.map(([name, count]) => (
@@ -79,9 +100,10 @@ const url = `${base}${locale === 'en' ? 'en/' : ''}songs/`;
                 type="button"
                 data-artist={name}
                 aria-pressed={initialArtist === name ? 'true' : 'false'}
-                class="block w-full text-left"
+                class="flex w-full items-center justify-between rounded-full px-3 py-1 text-sm"
               >
-                {name} ({count})
+                <span>{name}</span>
+                <span class="text-xs text-gray-600 dark:text-gray-400">{count}</span>
               </button>
             </li>
           ))}
