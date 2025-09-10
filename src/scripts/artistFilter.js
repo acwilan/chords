@@ -4,6 +4,8 @@ export default function artistFilter() {
   const sidebar = document.getElementById('artist-sidebar');
   const toggle = document.getElementById('artist-sidebar-toggle');
   const clear = document.getElementById('artist-clear');
+  const chipContainer = document.getElementById('active-artist');
+  const chipLabel = chipContainer?.dataset.label || 'Artist';
   const buttons = sidebar?.querySelectorAll('[data-artist]');
   if (!sidebar || !toggle || !buttons) return;
 
@@ -15,6 +17,18 @@ export default function artistFilter() {
       url.searchParams.delete('artist');
     }
     history.replaceState({}, '', url.toString());
+  }
+
+  function renderChip(artist) {
+    if (!chipContainer) return;
+    chipContainer.innerHTML = '';
+    if (!artist) return;
+    const chip = document.createElement('button');
+    chip.type = 'button';
+    chip.className = 'tag-pill flex items-center gap-1 text-sm';
+    chip.innerHTML = `${chipLabel}: ${artist} <span aria-hidden="true">&times;</span>`;
+    chip.addEventListener('click', () => activate(''));
+    chipContainer.appendChild(chip);
   }
 
   function activate(artist) {
@@ -31,6 +45,7 @@ export default function artistFilter() {
       localStorage.removeItem(STORAGE_KEY);
     }
     updateURL(artist);
+    renderChip(artist);
     if (window.applySongFilters) {
       window.applySongFilters();
     }

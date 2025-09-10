@@ -29,8 +29,9 @@ This repository hosts the source code for the chords site.
 
 The songs index includes a collapsible sidebar listing all artists. Selecting an artist filters
 the visible songs without reloading the page. The choice is saved in `localStorage` under
-`artistFilter` and reflected in the URL as `?artist=Name` for easy sharing. Use the **All** option to
-clear the filter, which removes the query parameter and stored value.
+`artistFilter` and reflected in the URL as `?artist=Name` for easy sharing. An active selection is
+highlighted in the sidebar and shown above the results as a removable chip. Use the **All** option or
+click the chip to clear the filter, which removes the query parameter and stored value.
 
 ## Running locally
 
