@@ -25,13 +25,13 @@ const songs = Array.from(map.entries()).map(([slug, langs]) => {
 });
 songs.sort((a, b) => a.entry.data.title.localeCompare(b.entry.data.title));
 const tags = Array.from(new Set(songs.flatMap((s) => s.entry.data.tags ?? []))).sort();
-const artistCounts = new Map();
+const artistCounts = new Map<string, number>();
 for (const song of songs) {
-  const artist = song.entry.data.artist || 'Unknown';
-  artistCounts.set(artist, (artistCounts.get(artist) || 0) + 1);
+  const name = song.entry.data.artist || 'Unknown';
+  artistCounts.set(name, (artistCounts.get(name) ?? 0) + 1);
 }
-const artists = Array.from(artistCounts.entries()).sort((a, b) =>
-  a[0].localeCompare(b[0])
+const artists = Array.from(artistCounts.entries()).sort(([a], [b]) =>
+  a.localeCompare(b)
 );
 const initialArtist = Astro.url.searchParams.get('artist');
 const description = t('songs.description');
