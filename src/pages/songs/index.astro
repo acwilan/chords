@@ -2,6 +2,7 @@
 import App from '../../layouts/App.astro';
 import { getCollection } from 'astro:content';
 import { getLocaleFromUrl, createT } from '../../utils/i18n';
+import artistFilterScript from '../../scripts/artistFilter.js?url';
 
 const base = import.meta.env.BASE_URL.endsWith('/')
   ? import.meta.env.BASE_URL
@@ -24,6 +25,15 @@ const songs = Array.from(map.entries()).map(([slug, langs]) => {
 });
 songs.sort((a, b) => a.entry.data.title.localeCompare(b.entry.data.title));
 const tags = Array.from(new Set(songs.flatMap((s) => s.entry.data.tags ?? []))).sort();
+const artistCounts = new Map();
+for (const song of songs) {
+  const artist = song.entry.data.artist || 'Unknown';
+  artistCounts.set(artist, (artistCounts.get(artist) || 0) + 1);
+}
+const artists = Array.from(artistCounts.entries()).sort((a, b) =>
+  a[0].localeCompare(b[0])
+);
+const initialArtist = Astro.url.searchParams.get('artist');
 const description = t('songs.description');
 const url = `${base}${locale === 'en' ? 'en/' : ''}songs/`;
 ---
@@ -37,85 +47,142 @@ const url = `${base}${locale === 'en' ? 'en/' : ''}songs/`;
     <meta property="og:url" content={url} />
   </Fragment>
   <h1>{t('songs.title')}</h1>
-  <label for="song-search" class="sr-only">{t('songs.searchPlaceholder')}</label>
-  <input
-    id="song-search"
-    type="text"
-    placeholder={t('songs.searchPlaceholder')}
-    class="input mb-4 w-full"
-  />
-  {tags.length > 0 && (
-    <div
-      id="tag-filters"
-      class="mb-4 flex flex-wrap gap-2"
-      aria-label={t('songs.tagFilterLabel')}
-    >
-      {tags.map((tag) => (
-        <button
-          type="button"
-          data-tag={tag.toLowerCase()}
-          aria-pressed="false"
-          class="tag-pill px-3 py-1 text-sm"
-        >
-          {tag}
-        </button>
-      ))}
-    </div>
-  )}
-  <ul
-    id="song-list"
-    class="grid list-none gap-4 p-0 sm:grid-cols-2 lg:grid-cols-3"
+  <button
+    id="artist-sidebar-toggle"
+    class="mb-4 md:hidden"
+    aria-controls="artist-sidebar"
+    aria-expanded="false"
+    type="button"
   >
-    {songs.map((song) => (
-      <li
-        class="list-none"
-        data-title={song.entry.data.title.toLowerCase()}
-        data-tags={(song.entry.data.tags ?? [])
-          .map((t) => t.toLowerCase())
-          .join(' ')}
-      >
-        <a
-          href={`${base}${song.linkLocale === 'en' ? 'en/' : ''}songs/${song.slug}/`}
-          class="card block"
+    {t('songs.artist')}
+  </button>
+  <div class="md:flex md:gap-4">
+    <aside
+      id="artist-sidebar"
+      class="mb-4 hidden w-48 shrink-0 md:block"
+    >
+      <nav aria-label="Artist filters">
+        <ul id="artist-filters" class="space-y-2">
+          <li>
+            <button
+              type="button"
+              data-artist=""
+              aria-pressed={initialArtist ? 'false' : 'true'}
+              class="block w-full text-left"
+            >
+              All ({songs.length})
+            </button>
+          </li>
+          {artists.map(([name, count]) => (
+            <li>
+              <button
+                type="button"
+                data-artist={name}
+                aria-pressed={initialArtist === name ? 'true' : 'false'}
+                class="block w-full text-left"
+              >
+                {name} ({count})
+              </button>
+            </li>
+          ))}
+        </ul>
+      </nav>
+    </aside>
+    <div class="flex-1">
+      <label for="song-search" class="sr-only">{t('songs.searchPlaceholder')}</label>
+      <input
+        id="song-search"
+        type="text"
+        placeholder={t('songs.searchPlaceholder')}
+        class="input mb-4 w-full"
+      />
+      {tags.length > 0 && (
+        <div
+          id="tag-filters"
+          class="mb-4 flex flex-wrap gap-2"
+          aria-label={t('songs.tagFilterLabel')}
         >
-          <h2 class="text-lg font-semibold">{song.entry.data.title}</h2>
-          {song.entry.data.artist && (
-            <p class="text-sm text-gray-600 dark:text-gray-400">{song.entry.data.artist}</p>
-          )}
-          {song.entry.data.key && (
-            <p class="text-sm text-gray-600 dark:text-gray-400">{t('songs.key')}: {song.entry.data.key}</p>
-          )}
-          {song.entry.data.tags && (
-            <ul class="mt-2 flex flex-wrap gap-1 list-none p-0">
-              {song.entry.data.tags.map((tag) => (
-                <li class="tag-pill">{tag}</li>
-              ))}
-            </ul>
-          )}
-        </a>
-      </li>
-    ))}
-  </ul>
-  <p class="mt-8"><a href={base}>{t('songs.goBack')}</a></p>
+          {tags.map((tag) => (
+            <button
+              type="button"
+              data-tag={tag.toLowerCase()}
+              aria-pressed="false"
+              class="tag-pill px-3 py-1 text-sm"
+            >
+              {tag}
+            </button>
+          ))}
+        </div>
+      )}
+      <ul
+        id="song-list"
+        class="grid list-none gap-4 p-0 sm:grid-cols-2 lg:grid-cols-3"
+      >
+        {songs.map((song) => {
+          const artist = song.entry.data.artist || 'Unknown';
+          const hidden =
+            initialArtist && artist !== initialArtist ? true : false;
+          return (
+            <li
+              class="list-none"
+              data-title={song.entry.data.title.toLowerCase()}
+              data-tags={(song.entry.data.tags ?? [])
+                .map((t) => t.toLowerCase())
+                .join(' ')}
+              data-artist={artist}
+              hidden={hidden}
+            >
+              <a
+                href={`${base}${song.linkLocale === 'en' ? 'en/' : ''}songs/${song.slug}/`}
+                class="card block"
+              >
+                <h2 class="text-lg font-semibold">{song.entry.data.title}</h2>
+                {song.entry.data.artist && (
+                  <p class="text-sm text-gray-600 dark:text-gray-400">{song.entry.data.artist}</p>
+                )}
+                {song.entry.data.key && (
+                  <p class="text-sm text-gray-600 dark:text-gray-400">
+                    {t('songs.key')}: {song.entry.data.key}
+                  </p>
+                )}
+                {song.entry.data.tags && (
+                  <ul class="mt-2 flex flex-wrap gap-1 list-none p-0">
+                    {song.entry.data.tags.map((tag) => (
+                      <li class="tag-pill">{tag}</li>
+                    ))}
+                  </ul>
+                )}
+              </a>
+            </li>
+          );
+        })}
+      </ul>
+      <p class="mt-8"><a href={base}>{t('songs.goBack')}</a></p>
+    </div>
+  </div>
+  <script id="artist-data" type="application/json">
+    {JSON.stringify(artists)}
+  </script>
   <script is:inline>
-    const songItems = document.querySelectorAll('#song-list li');
+    const songItems = document.querySelectorAll('#song-list > li');
     const searchInput = document.getElementById('song-search');
     const tagButtons = document.querySelectorAll('#tag-filters button');
-
     function applyFilters() {
       const query = searchInput.value.trim().toLowerCase();
       const activeTags = Array.from(tagButtons)
         .filter((btn) => btn.getAttribute('aria-pressed') === 'true')
         .map((btn) => btn.dataset.tag);
       songItems.forEach((item) => {
-        const title = item.dataset.title;
+        const title = item.dataset.title || '';
         const tags = item.dataset.tags ? item.dataset.tags.split(' ') : [];
+        const itemArtist = item.dataset.artist || 'Unknown';
         const matchesTitle = title.includes(query);
         const matchesTags = activeTags.every((tag) => tags.includes(tag));
-        item.hidden = !(matchesTitle && matchesTags);
+        const matchesArtist = !window.activeArtist || itemArtist === window.activeArtist;
+        item.hidden = !(matchesTitle && matchesTags && matchesArtist);
       });
     }
-
+    window.applySongFilters = applyFilters;
     searchInput.addEventListener('input', applyFilters);
     tagButtons.forEach((btn) => {
       btn.addEventListener('click', () => {
@@ -127,4 +194,5 @@ const url = `${base}${locale === 'en' ? 'en/' : ''}songs/`;
       });
     });
   </script>
+  <script type="module" src={artistFilterScript}></script>
 </App>
