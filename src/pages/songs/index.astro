@@ -120,8 +120,11 @@ const url = `${base}${locale === 'en' ? 'en/' : ''}songs/`;
         id="song-search"
         type="text"
         placeholder={t('songs.searchPlaceholder')}
-        class="input mb-4 w-full"
+        class="input mb-2 w-full"
       />
+      <p class="mb-4 text-xs text-gray-600 dark:text-gray-400">
+        {t('songs.searchTip')}
+      </p>
       {tags.length > 0 && (
         <div
           id="tag-filters"
@@ -259,6 +262,28 @@ const url = `${base}${locale === 'en' ? 'en/' : ''}songs/`;
         btn.classList.toggle('text-white', !pressed);
         applyFilters();
       });
+    });
+
+    window.addEventListener('keydown', (e) => {
+      if (e.key === '/' && !e.ctrlKey && !e.metaKey && !e.altKey) {
+        if (
+          e.target instanceof HTMLInputElement ||
+          e.target instanceof HTMLTextAreaElement ||
+          e.target instanceof HTMLSelectElement
+        ) {
+          return;
+        }
+        e.preventDefault();
+        searchInput.focus();
+      } else if (e.key === 'Escape') {
+        e.preventDefault();
+        if (searchInput.value) {
+          searchInput.value = '';
+          applyFilters();
+        } else {
+          document.getElementById('artist-clear')?.click();
+        }
+      }
     });
   </script>
   <script type="module" src={artistFilterScript}></script>

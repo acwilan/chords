@@ -16,6 +16,7 @@
     "title": "Canciones",
     "description": "Buscar y explorar cifras de canciones de adoración",
     "searchPlaceholder": "Buscar canciones",
+    "searchTip": "Presiona '/' para enfocar la búsqueda. Presiona 'Esc' para limpiar la búsqueda o el filtro de artista.",
     "count": "{count} canciones",
     "tagFilterLabel": "Filtrar por etiqueta",
     "key": "Tonalidad",

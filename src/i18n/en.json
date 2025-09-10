@@ -16,6 +16,7 @@
     "title": "Songs",
     "description": "Browse and search chord charts for worship songs",
     "searchPlaceholder": "Search songs",
+    "searchTip": "Press '/' to focus search. Press 'Esc' to clear search or artist filter.",
     "count": "{count} songs",
     "tagFilterLabel": "Filter by tag",
     "key": "Key",
