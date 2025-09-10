@@ -10,7 +10,7 @@ This repository hosts the source code for the chords site.
 ## Adding new songs
 
 1. Add an `.md` file in `src/content/songs/` with the song's frontmatter.
-2. Provide `slug`, `lang` (`es` or `en`), `title` and optional fields like `key`, `bpm`, `tags` and `pdf`.
+2. Provide `slug`, `lang` (`es` or `en`), `title` and optional fields like `key`, `bpm`, `artist`, `author`, `tags` and `pdf`.
 3. Place the PDF chart in `public/charts/` with the same name referenced in the frontmatter.
 
 ## Localization
@@ -18,6 +18,11 @@ This repository hosts the source code for the chords site.
 - Translations live in `src/i18n/*.json`. Add new keys in each locale file.
 - Use the `t(key)` utility from `src/utils/i18n.ts` for UI strings.
 - To localize songs, create one file per language using the same base filename (e.g., `mi-cancion.es.md`, `mi-cancion.en.md`) and set the `lang` field accordingly.
+
+## Frontmatter fields
+
+- `artist` and `author` are optional metadata fields.
+- `capo` is no longer supported.
 
 ## Running locally
 

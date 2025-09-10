@@ -79,6 +79,9 @@ const url = `${base}${locale === 'en' ? 'en/' : ''}songs/`;
           class="card block"
         >
           <h2 class="text-lg font-semibold">{song.entry.data.title}</h2>
+          {song.entry.data.artist && (
+            <p class="text-sm text-gray-600 dark:text-gray-400">{song.entry.data.artist}</p>
+          )}
           {song.entry.data.key && (
             <p class="text-sm text-gray-600 dark:text-gray-400">{t('songs.key')}: {song.entry.data.key}</p>
           )}
