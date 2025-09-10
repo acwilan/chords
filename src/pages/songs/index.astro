@@ -34,6 +34,10 @@ const artists = Array.from(artistCounts.entries()).sort(([a], [b]) =>
   a.localeCompare(b)
 );
 const initialArtist = Astro.url.searchParams.get('artist');
+const initialCount = songs.filter((song) => {
+  const artist = song.entry.data.artist || 'Unknown';
+  return !initialArtist || artist === initialArtist;
+}).length;
 const description = t('songs.description');
 const url = `${base}${locale === 'en' ? 'en/' : ''}songs/`;
 ---
@@ -136,6 +140,14 @@ const url = `${base}${locale === 'en' ? 'en/' : ''}songs/`;
           ))}
         </div>
       )}
+      <p
+        id="song-count"
+        class="mb-4"
+        aria-live="polite"
+        data-count-template={t('songs.count', { count: '{count}' })}
+      >
+        {t('songs.count', { count: initialCount })}
+      </p>
       <ul
         id="song-list"
         class="grid list-none gap-4 p-0 sm:grid-cols-2 lg:grid-cols-3"
@@ -191,6 +203,8 @@ const url = `${base}${locale === 'en' ? 'en/' : ''}songs/`;
     const songItems = document.querySelectorAll('#song-list > li');
     const searchInput = document.getElementById('song-search');
     const tagButtons = document.querySelectorAll('#tag-filters button');
+    const countEl = document.getElementById('song-count');
+    const countTemplate = countEl?.dataset.countTemplate || '{count}';
 
     const songs = Array.from(songItems).map((element) => ({
       element,
@@ -204,6 +218,11 @@ const url = `${base}${locale === 'en' ? 'en/' : ''}songs/`;
       threshold: 0.3,
       ignoreLocation: true,
     });
+
+    function updateCount() {
+      const visible = songs.filter((s) => !s.element.hidden).length;
+      countEl.textContent = countTemplate.replace('{count}', visible);
+    }
 
     function applyFilters() {
       const query = searchInput.value.trim();
@@ -221,6 +240,7 @@ const url = `${base}${locale === 'en' ? 'en/' : ''}songs/`;
         const matchesArtist = !activeArtist || song.artist === activeArtist;
         song.element.hidden = !(matchesSearch && matchesTags && matchesArtist);
       });
+      updateCount();
     }
 
     window.applySongFilters = applyFilters;
