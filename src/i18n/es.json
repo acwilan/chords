@@ -16,6 +16,7 @@
     "title": "Canciones",
     "description": "Buscar y explorar cifras de canciones de adoración",
     "searchPlaceholder": "Buscar canciones",
+    "count": "{count} canciones",
     "tagFilterLabel": "Filtrar por etiqueta",
     "key": "Tonalidad",
     "bpm": "BPM",
