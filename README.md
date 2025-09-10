@@ -11,6 +11,7 @@ This repository hosts the source code for the chords site.
 
 1. Add an `.md` file in `src/content/songs/` with the song's frontmatter.
 2. Provide `slug`, `lang` (`es` or `en`), `title` and optional fields like `key`, `bpm`, `artist`, `author`, `tags` and `pdf`.
+   The `artist` field is used to build the artist filter on the songs page.
 3. Place the PDF chart in `public/charts/` with the same name referenced in the frontmatter.
 
 ## Localization
@@ -23,6 +24,13 @@ This repository hosts the source code for the chords site.
 
 - `artist` and `author` are optional metadata fields.
 - `capo` is no longer supported.
+
+## Artist filter
+
+The songs index includes a collapsible sidebar listing all artists. Selecting an artist filters
+the visible songs without reloading the page. The choice is saved in `localStorage` under
+`artistFilter` and reflected in the URL as `?artist=Name` for easy sharing. Use the **All** option to
+clear the filter, which removes the query parameter and stored value.
 
 ## Running locally
 
