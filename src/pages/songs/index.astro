@@ -272,7 +272,9 @@ const url = `${base}${locale === 'en' ? 'en/' : ''}songs/`;
           e.target instanceof HTMLSelectElement
         ) {
           e.preventDefault();
+          return;
         }
+        e.preventDefault();
         searchInput.focus();
       } else if (e.key === 'Escape') {
         e.preventDefault();
