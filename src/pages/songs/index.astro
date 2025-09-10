@@ -82,20 +82,20 @@ const url = `${base}${locale === 'en' ? 'en/' : ''}songs/`;
         </button>
       </div>
       <nav aria-label="Artist filters">
-        <ul id="artist-filters" class="space-y-2">
-          <li>
+        <ul id="artist-filters" class="space-y-2 pl-0">
+          <li class="list-none">
             <button
               type="button"
               data-artist=""
               aria-pressed={initialArtist ? 'false' : 'true'}
               class="flex w-full items-center justify-between rounded-full px-3 py-1 text-sm"
             >
-              <span>All</span>
+              <span>{t('songs.all')}</span>
               <span class="text-xs text-gray-600 dark:text-gray-400">{songs.length}</span>
             </button>
           </li>
           {artists.map(([name, count]) => (
-            <li>
+            <li class="list-none">
               <button
                 type="button"
                 data-artist={name}
