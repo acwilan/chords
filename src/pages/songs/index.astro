@@ -167,7 +167,6 @@ const url = `${base}${locale === 'en' ? 'en/' : ''}songs/`;
     const songItems = document.querySelectorAll('#song-list li');
     const searchInput = document.getElementById('song-search');
     const tagButtons = document.querySelectorAll('#tag-filters button');
-    window.activeArtist = {JSON.stringify(initialArtist ?? '')};
     function applyFilters() {
       const query = searchInput.value.trim().toLowerCase();
       const activeTags = Array.from(tagButtons)
