@@ -58,8 +58,11 @@ const description = t('songs.chartFor', { title: song.data.title });
       {song.data.bpm && (
         <span><strong>{t('songs.bpm')}:</strong> {song.data.bpm}</span>
       )}
-      {song.data.capo && (
-        <span><strong>{t('songs.capo')}:</strong> {song.data.capo}</span>
+      {song.data.artist && (
+        <span><strong>{t('songs.artist')}:</strong> {song.data.artist}</span>
+      )}
+      {song.data.author && (
+        <span><strong>{t('songs.author')}:</strong> {song.data.author}</span>
       )}
     </div>
     {song.data.tags && (
