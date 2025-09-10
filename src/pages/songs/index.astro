@@ -195,6 +195,17 @@ const url = `${base}${locale === 'en' ? 'en/' : ''}songs/`;
           );
         })}
       </ul>
+      <div id="empty-state" class="mt-8 text-center" hidden>
+        <div class="mb-4 text-4xl" aria-hidden="true">🎵</div>
+        <p class="mb-4">{t('songs.noMatches')}</p>
+        <button
+          id="clear-filters"
+          type="button"
+          class="text-sm text-blue-600 hover:underline"
+        >
+          {t('songs.clearFilters')}
+        </button>
+      </div>
       <p class="mt-8"><a href={base}>{t('songs.goBack')}</a></p>
     </div>
   </div>
@@ -209,6 +220,8 @@ const url = `${base}${locale === 'en' ? 'en/' : ''}songs/`;
     const tagButtons = document.querySelectorAll('#tag-filters button');
     const countEl = document.getElementById('song-count');
     const countTemplate = countEl?.dataset.countTemplate || '{count}';
+    const emptyState = document.getElementById('empty-state');
+    const clearFiltersBtn = document.getElementById('clear-filters');
 
     const songs = Array.from(songItems).map((element) => ({
       element,
@@ -226,6 +239,9 @@ const url = `${base}${locale === 'en' ? 'en/' : ''}songs/`;
     function updateCount() {
       const visible = songs.filter((s) => !s.element.hidden).length;
       countEl.textContent = countTemplate.replace('{count}', visible);
+      if (emptyState) {
+        emptyState.hidden = visible !== 0;
+      }
     }
 
     function applyFilters() {
@@ -263,6 +279,12 @@ const url = `${base}${locale === 'en' ? 'en/' : ''}songs/`;
         btn.classList.toggle('text-white', !pressed);
         applyFilters();
       });
+    });
+
+    clearFiltersBtn?.addEventListener('click', () => {
+      searchInput.value = '';
+      document.getElementById('artist-clear')?.click();
+      applyFilters();
     });
 
     window.addEventListener('keydown', (e) => {
