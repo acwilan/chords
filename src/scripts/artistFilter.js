@@ -3,6 +3,7 @@ const STORAGE_KEY = 'artistFilter';
 export default function artistFilter() {
   const sidebar = document.getElementById('artist-sidebar');
   const toggle = document.getElementById('artist-sidebar-toggle');
+  const clear = document.getElementById('artist-clear');
   const buttons = sidebar?.querySelectorAll('[data-artist]');
   if (!sidebar || !toggle || !buttons) return;
 
@@ -21,7 +22,8 @@ export default function artistFilter() {
     buttons.forEach((btn) => {
       const isActive = btn.dataset.artist === artist;
       btn.setAttribute('aria-pressed', String(isActive));
-      btn.classList.toggle('font-bold', isActive);
+      btn.classList.toggle('bg-gray-200', isActive);
+      btn.classList.toggle('dark:bg-gray-700', isActive);
     });
     if (artist) {
       localStorage.setItem(STORAGE_KEY, artist);
@@ -41,10 +43,15 @@ export default function artistFilter() {
     });
   });
 
+  clear?.addEventListener('click', () => {
+    activate('');
+  });
+
   toggle.addEventListener('click', () => {
     const expanded = toggle.getAttribute('aria-expanded') === 'true';
     toggle.setAttribute('aria-expanded', String(!expanded));
     sidebar.classList.toggle('hidden', expanded);
+    toggle.querySelector('svg')?.classList.toggle('rotate-180', !expanded);
   });
 
   let selected = new URLSearchParams(window.location.search).get('artist');
