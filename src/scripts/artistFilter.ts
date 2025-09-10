@@ -73,3 +73,5 @@ export default function artistFilter() {
   }
   activate(selected || '');
 }
+
+artistFilter();

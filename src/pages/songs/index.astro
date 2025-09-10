@@ -2,7 +2,6 @@
 import App from '../../layouts/App.astro';
 import { getCollection } from 'astro:content';
 import { getLocaleFromUrl, createT } from '../../utils/i18n';
-import artistFilter from '../../scripts/artistFilter';
 
 const base = import.meta.env.BASE_URL.endsWith('/')
   ? import.meta.env.BASE_URL
@@ -195,7 +194,9 @@ const url = `${base}${locale === 'en' ? 'en/' : ''}songs/`;
       });
     });
   </script>
-  <script is:inline client:load>
-    artistFilter();
-  </script>
+  <script
+    type="module"
+    src={Astro.resolve('../../scripts/artistFilter.ts')}
+    client:load
+  ></script>
 </App>
