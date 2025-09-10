@@ -1,29 +1,12 @@
 const STORAGE_KEY = 'artistFilter';
 
-declare global {
-  interface Window {
-    activeArtist: string;
-    applySongFilters?: () => void;
-  }
-}
-
 export default function artistFilter() {
   const sidebar = document.getElementById('artist-sidebar');
   const toggle = document.getElementById('artist-sidebar-toggle');
-  const buttons = sidebar?.querySelectorAll<HTMLButtonElement>('[data-artist]');
+  const buttons = sidebar?.querySelectorAll('[data-artist]');
   if (!sidebar || !toggle || !buttons) return;
 
-  const artistData = document.getElementById('artist-data');
-  let _artists: any = [];
-  if (artistData) {
-    try {
-      _artists = JSON.parse(artistData.textContent || '[]');
-    } catch {
-      _artists = [];
-    }
-  }
-
-  function updateURL(artist: string) {
+  function updateURL(artist) {
     const url = new URL(window.location.href);
     if (artist) {
       url.searchParams.set('artist', artist);
@@ -33,10 +16,10 @@ export default function artistFilter() {
     history.replaceState({}, '', url.toString());
   }
 
-  function activate(artist: string) {
+  function activate(artist) {
     window.activeArtist = artist;
     buttons.forEach((btn) => {
-      const isActive = (btn as HTMLButtonElement).dataset.artist === artist;
+      const isActive = btn.dataset.artist === artist;
       btn.setAttribute('aria-pressed', String(isActive));
       btn.classList.toggle('font-bold', isActive);
     });
@@ -46,12 +29,14 @@ export default function artistFilter() {
       localStorage.removeItem(STORAGE_KEY);
     }
     updateURL(artist);
-    window.applySongFilters?.();
+    if (window.applySongFilters) {
+      window.applySongFilters();
+    }
   }
 
   buttons.forEach((btn) => {
     btn.addEventListener('click', () => {
-      const artist = (btn as HTMLButtonElement).dataset.artist || '';
+      const artist = btn.dataset.artist || '';
       activate(artist);
     });
   });
