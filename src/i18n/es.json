@@ -23,6 +23,7 @@
     "bpm": "BPM",
       "artist": "Artista",
       "artists": "Artistas",
+      "filters": "Filtros",
       "noMatches": "No hay canciones que coincidan con tus filtros.",
       "clear": "Limpiar",
       "clearFilters": "Limpiar filtros",
