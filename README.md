@@ -27,8 +27,10 @@ Use `npm run content:clean` to remove fetched files.
 
 1. Add an `.md` file in `src/content/songs/` with the song's frontmatter.
 2. Provide `slug`, `lang` (`es` or `en`), `title` and optional fields like `key`, `bpm`, `artist`, `author`, `tags` and `pdf`.
+   The `pdf` value may be just the filename (`Mi-Cancion.pdf`), an absolute path (`/charts/Mi-Cancion.pdf`),
+   or a path including the normalized artist name (`/charts/sixpence-none-the-richer/Kiss-Me.pdf`).
    The `artist` field is used to build the artist filter on the songs page.
-3. Place the PDF chart in `public/charts/` with the same name referenced in the frontmatter.
+3. Place the PDF chart in `public/charts/` matching the path or filename used in the `pdf` field.
 
 ## Localization
 
