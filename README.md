@@ -11,6 +11,14 @@ This repository hosts the source code for the chords site.
 
 Song metadata and charts can be fetched from an external bundle. Copy `.env.example` to `.env` and adjust variables if necessary.
 
+Forks should set repository Variables so the workflow can fetch their own release:
+
+- `CONTENT_OWNER`
+- `CONTENT_REPO`
+- `CONTENT_VERSION`
+- `CONTENT_FILENAME`
+- `CONTENT_SHA256` (optional)
+
 Run `npm run content:fetch` to download the bundle and populate `src/content/songs` and `public/charts`.
 Use `npm run content:clean` to remove fetched files.
 
