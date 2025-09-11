@@ -33,8 +33,8 @@ jobs:
         with:
           branch: release/v${{ env.version }}
           base: main
-          title: chore(release): v${{ env.version }}
-          body: Release v${{ env.version }}
+          title: "chore(release): v${{ env.version }}"
+          body: "Release v${{ env.version }}"
       - name: Push release tag
         run: git push origin v${{ env.version }}
         env:
