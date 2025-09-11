@@ -86,7 +86,9 @@ const url = `${base}${locale === 'en' ? 'en/' : ''}songs/`;
               type="button"
               data-artist=""
               aria-pressed={initialArtist ? 'false' : 'true'}
-              class="flex w-full items-center justify-between rounded-full px-3 py-1 text-sm"
+              class={`flex w-full items-center justify-between rounded-full px-3 py-1 text-sm ${
+                initialArtist ? '' : 'bg-gray-200 dark:bg-gray-700'
+              }`}
             >
               <span>{t('songs.all')}</span>
               <span class="text-xs text-gray-600 dark:text-gray-400">{songs.length}</span>
@@ -98,7 +100,9 @@ const url = `${base}${locale === 'en' ? 'en/' : ''}songs/`;
                 type="button"
                 data-artist={name}
                 aria-pressed={initialArtist === name ? 'true' : 'false'}
-                class="flex w-full items-center justify-between rounded-full px-3 py-1 text-sm"
+                class={`flex w-full items-center justify-between rounded-full px-3 py-1 text-sm ${
+                  initialArtist === name ? 'bg-gray-200 dark:bg-gray-700' : ''
+                }`}
               >
                 <span>{name}</span>
                 <span class="text-xs text-gray-600 dark:text-gray-400">{count}</span>
@@ -142,7 +146,11 @@ const url = `${base}${locale === 'en' ? 'en/' : ''}songs/`;
               type="button"
               data-tag={tag.toLowerCase()}
               aria-pressed={initialTag === tag.toLowerCase() ? 'true' : 'false'}
-              class="tag-pill flex items-center gap-1 px-3 py-1 text-sm"
+              class={`tag-pill flex items-center gap-1 px-3 py-1 text-sm ${
+                initialTag === tag.toLowerCase()
+                  ? 'bg-primary text-white dark:bg-primary dark:text-white'
+                  : ''
+              }`}
             >
               <span>{tag}</span>
               <span class="text-xs text-gray-600 dark:text-gray-400">({count})</span>
@@ -150,7 +158,16 @@ const url = `${base}${locale === 'en' ? 'en/' : ''}songs/`;
           ))}
         </div>
       )}
-      <div id="active-artist" class="mb-4" data-label={t('songs.artist')}></div>
+      <div id="active-artist" class="mb-4" data-label={t('songs.artist')}>
+        {initialArtist && (
+          <button
+            type="button"
+            class="tag-pill flex items-center gap-1 text-sm"
+          >
+            {t('songs.artist')}: {initialArtist} <span aria-hidden="true">&times;</span>
+          </button>
+        )}
+      </div>
       <p
         id="song-count"
         class="mb-4"
@@ -222,6 +239,12 @@ const url = `${base}${locale === 'en' ? 'en/' : ''}songs/`;
       <p class="mt-8"><a href={base}>{t('songs.goBack')}</a></p>
     </div>
   </div>
+  {initialArtist && (
+    <script is:inline>window.activeArtist = {JSON.stringify(initialArtist)};</script>
+  )}
+  {initialTag && (
+    <script is:inline>window.activeTag = {JSON.stringify(initialTag)};</script>
+  )}
   <script id="artist-data" type="application/json">
     {JSON.stringify(artists)}
   </script>
@@ -298,7 +321,9 @@ const url = `${base}${locale === 'en' ? 'en/' : ''}songs/`;
         const isActive = btn.dataset.tag === tag;
         btn.setAttribute('aria-pressed', String(isActive));
         btn.classList.toggle('bg-primary', isActive);
+        btn.classList.toggle('dark:bg-primary', isActive);
         btn.classList.toggle('text-white', isActive);
+        btn.classList.toggle('dark:text-white', isActive);
       });
       if (tag) {
         localStorage.setItem(TAG_STORAGE_KEY, tag);
@@ -322,16 +347,22 @@ const url = `${base}${locale === 'en' ? 'en/' : ''}songs/`;
       activateTag('');
     });
 
-    let selectedTag = new URLSearchParams(window.location.search).get('tag');
-    if (selectedTag) {
-      localStorage.setItem(TAG_STORAGE_KEY, selectedTag);
-    } else {
-      const storedTag = localStorage.getItem(TAG_STORAGE_KEY);
-      if (storedTag) {
-        selectedTag = storedTag;
+    let selectedTag = window.activeTag;
+    if (!selectedTag) {
+      selectedTag = new URLSearchParams(window.location.search).get('tag');
+      if (selectedTag) {
+        localStorage.setItem(TAG_STORAGE_KEY, selectedTag);
+        activateTag(selectedTag);
+      } else {
+        const storedTag = localStorage.getItem(TAG_STORAGE_KEY);
+        if (storedTag) {
+          selectedTag = storedTag;
+          activateTag(storedTag);
+        }
       }
+    } else {
+      localStorage.setItem(TAG_STORAGE_KEY, selectedTag);
     }
-    activateTag(selectedTag || '');
 
     window.addEventListener('keydown', (e) => {
       if (e.key === '/' && !e.ctrlKey && !e.metaKey && !e.altKey) {

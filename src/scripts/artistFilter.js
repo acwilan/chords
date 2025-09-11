@@ -103,6 +103,9 @@ export default function artistFilter() {
     }
   }
 
+  const existingChip = chipContainer?.querySelector('button');
+  existingChip?.addEventListener('click', () => activate(''));
+
   buttons.forEach((btn) => {
     btn.addEventListener('click', () => {
       const artist = btn.dataset.artist || '';
@@ -127,16 +130,24 @@ export default function artistFilter() {
     closeSidebar();
   });
 
-  let selected = new URLSearchParams(window.location.search).get('artist');
-  if (selected) {
-    localStorage.setItem(STORAGE_KEY, selected);
-  } else {
-    const stored = localStorage.getItem(STORAGE_KEY);
-    if (stored) {
-      selected = stored;
+  let selected = window.activeArtist;
+  if (!selected) {
+    selected = new URLSearchParams(window.location.search).get('artist');
+    if (selected) {
+      localStorage.setItem(STORAGE_KEY, selected);
+      activate(selected);
+    } else {
+      const stored = localStorage.getItem(STORAGE_KEY);
+      if (stored) {
+        selected = stored;
+        activate(stored);
+      } else {
+        activate('');
+      }
     }
+  } else {
+    localStorage.setItem(STORAGE_KEY, selected);
   }
-  activate(selected || '');
 }
 
 artistFilter();
