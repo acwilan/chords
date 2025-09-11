@@ -24,7 +24,15 @@ const songs = Array.from(map.entries()).map(([slug, langs]) => {
   return { slug, entry, linkLocale };
 });
 songs.sort((a, b) => a.entry.data.title.localeCompare(b.entry.data.title));
-const tags = Array.from(new Set(songs.flatMap((s) => s.entry.data.tags ?? []))).sort();
+const tagCounts = new Map<string, number>();
+for (const song of songs) {
+  for (const tag of song.entry.data.tags ?? []) {
+    tagCounts.set(tag, (tagCounts.get(tag) ?? 0) + 1);
+  }
+}
+const tags = Array.from(tagCounts.entries()).sort(([a], [b]) =>
+  a.localeCompare(b)
+);
 const artistCounts = new Map<string, number>();
 for (const song of songs) {
   const name = song.entry.data.artist || 'Unknown';
@@ -34,9 +42,13 @@ const artists = Array.from(artistCounts.entries()).sort(([a], [b]) =>
   a.localeCompare(b)
 );
 const initialArtist = Astro.url.searchParams.get('artist');
+const initialTag = Astro.url.searchParams.get('tag')?.toLowerCase();
 const initialCount = songs.filter((song) => {
   const artist = song.entry.data.artist || 'Unknown';
-  return !initialArtist || artist === initialArtist;
+  const songTags = (song.entry.data.tags ?? []).map((t) => t.toLowerCase());
+  const matchesArtist = !initialArtist || artist === initialArtist;
+  const matchesTag = !initialTag || songTags.includes(initialTag);
+  return matchesArtist && matchesTag;
 }).length;
 const description = t('songs.description');
 const url = `${base}${locale === 'en' ? 'en/' : ''}songs/`;
@@ -125,14 +137,15 @@ const url = `${base}${locale === 'en' ? 'en/' : ''}songs/`;
           class="mb-4 flex flex-wrap gap-2"
           aria-label={t('songs.tagFilterLabel')}
         >
-          {tags.map((tag) => (
+          {tags.map(([tag, count]) => (
             <button
               type="button"
               data-tag={tag.toLowerCase()}
-              aria-pressed="false"
-              class="tag-pill px-3 py-1 text-sm"
+              aria-pressed={initialTag === tag.toLowerCase() ? 'true' : 'false'}
+              class="tag-pill flex items-center gap-1 px-3 py-1 text-sm"
             >
-              {tag}
+              <span>{tag}</span>
+              <span class="text-xs text-gray-600 dark:text-gray-400">({count})</span>
             </button>
           ))}
         </div>
@@ -153,7 +166,13 @@ const url = `${base}${locale === 'en' ? 'en/' : ''}songs/`;
         {songs.map((song) => {
           const artist = song.entry.data.artist || 'Unknown';
           const hidden =
-            initialArtist && artist !== initialArtist ? true : false;
+            (initialArtist && artist !== initialArtist) ||
+            (initialTag &&
+              !(song.entry.data.tags ?? [])
+                .map((t) => t.toLowerCase())
+                .includes(initialTag))
+              ? true
+              : false;
           return (
             <li
               class="list-none"
@@ -212,6 +231,7 @@ const url = `${base}${locale === 'en' ? 'en/' : ''}songs/`;
     const songItems = document.querySelectorAll('#song-list > li');
     const searchInput = document.getElementById('song-search');
     const tagButtons = document.querySelectorAll('#tag-filters button');
+    const TAG_STORAGE_KEY = 'tagFilter';
     const countEl = document.getElementById('song-count');
     const countTemplate = countEl?.dataset.countTemplate || '{count}';
     const emptyState = document.getElementById('empty-state');
@@ -240,19 +260,16 @@ const url = `${base}${locale === 'en' ? 'en/' : ''}songs/`;
 
     function applyFilters() {
       const query = searchInput.value.trim();
-      const activeTags = Array.from(tagButtons)
-        .filter((btn) => btn.getAttribute('aria-pressed') === 'true')
-        .map((btn) => btn.dataset.tag);
-
       const results = query ? fuse.search(query).map((r) => r.item) : songs;
       const resultSet = new Set(results);
       const activeArtist = window.activeArtist;
+      const activeTag = window.activeTag;
 
       songs.forEach((song) => {
         const matchesSearch = resultSet.has(song);
-        const matchesTags = activeTags.every((tag) => song.tags.includes(tag));
+        const matchesTag = !activeTag || song.tags.includes(activeTag);
         const matchesArtist = !activeArtist || song.artist === activeArtist;
-        song.element.hidden = !(matchesSearch && matchesTags && matchesArtist);
+        song.element.hidden = !(matchesSearch && matchesTag && matchesArtist);
       });
       updateCount();
     }
@@ -265,21 +282,56 @@ const url = `${base}${locale === 'en' ? 'en/' : ''}songs/`;
       debounce = setTimeout(applyFilters, 200);
     });
 
+    function updateTagURL(tag) {
+      const url = new URL(window.location.href);
+      if (tag) {
+        url.searchParams.set('tag', tag);
+      } else {
+        url.searchParams.delete('tag');
+      }
+      history.replaceState({}, '', url.toString());
+    }
+
+    function activateTag(tag) {
+      window.activeTag = tag;
+      tagButtons.forEach((btn) => {
+        const isActive = btn.dataset.tag === tag;
+        btn.setAttribute('aria-pressed', String(isActive));
+        btn.classList.toggle('bg-primary', isActive);
+        btn.classList.toggle('text-white', isActive);
+      });
+      if (tag) {
+        localStorage.setItem(TAG_STORAGE_KEY, tag);
+      } else {
+        localStorage.removeItem(TAG_STORAGE_KEY);
+      }
+      updateTagURL(tag);
+      applyFilters();
+    }
+
     tagButtons.forEach((btn) => {
       btn.addEventListener('click', () => {
-        const pressed = btn.getAttribute('aria-pressed') === 'true';
-        btn.setAttribute('aria-pressed', String(!pressed));
-        btn.classList.toggle('bg-primary', !pressed);
-        btn.classList.toggle('text-white', !pressed);
-        applyFilters();
+        const tag = btn.dataset.tag || '';
+        activateTag(window.activeTag === tag ? '' : tag);
       });
     });
 
     clearFiltersBtn?.addEventListener('click', () => {
       searchInput.value = '';
       document.getElementById('artist-clear')?.click();
-      applyFilters();
+      activateTag('');
     });
+
+    let selectedTag = new URLSearchParams(window.location.search).get('tag');
+    if (selectedTag) {
+      localStorage.setItem(TAG_STORAGE_KEY, selectedTag);
+    } else {
+      const storedTag = localStorage.getItem(TAG_STORAGE_KEY);
+      if (storedTag) {
+        selectedTag = storedTag;
+      }
+    }
+    activateTag(selectedTag || '');
 
     window.addEventListener('keydown', (e) => {
       if (e.key === '/' && !e.ctrlKey && !e.metaKey && !e.altKey) {
@@ -299,6 +351,7 @@ const url = `${base}${locale === 'en' ? 'en/' : ''}songs/`;
           applyFilters();
         } else {
           document.getElementById('artist-clear')?.click();
+          activateTag('');
         }
       }
     });
