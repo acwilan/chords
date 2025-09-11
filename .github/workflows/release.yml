@@ -5,6 +5,7 @@ on:
 
 permissions:
   contents: write
+  pull-requests: write
 
 jobs:
   release:
@@ -24,7 +25,19 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
       - run: npm run release
-      - run: git push --follow-tags origin main
+      - name: Get release version
+        run: |
+          version=$(node -p "require('./package.json').version")
+          echo "version=$version" >> "$GITHUB_ENV"
+      - name: Create release pull request
+        uses: peter-evans/create-pull-request@v6
+        with:
+          branch: release/v${{ env.version }}
+          base: main
+          title: "chore(release): v${{ env.version }}"
+          body: "Release v${{ env.version }}"
+      - name: Push release tag
+        run: git push origin v${{ env.version }}
         env:
           GIT_AUTHOR_NAME: github-actions[bot]
           GIT_AUTHOR_EMAIL: 41898282+github-actions[bot]@users.noreply.github.com
