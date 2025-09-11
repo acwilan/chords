@@ -68,7 +68,7 @@ const description = t('songs.chartFor', { title: song.data.title });
     {song.data.tags && (
       <div class="mt-2 flex flex-wrap gap-2">
         {song.data.tags.map((tag) => (
-          <span class="tag-pill">{tag}</span>
+          <span class="pill bg-gray-200 px-2 py-0.5 text-xs text-gray-700 dark:bg-gray-700 dark:text-gray-200">{tag}</span>
         ))}
       </div>
     )}

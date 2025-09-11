@@ -77,7 +77,7 @@ export default function artistFilter() {
     if (!artist) return;
     const chip = document.createElement('button');
     chip.type = 'button';
-    chip.className = 'tag-pill flex items-center gap-1 text-sm';
+    chip.className = 'pill flex items-center gap-1 px-3 py-1 text-sm bg-gray-200 text-gray-700 dark:bg-gray-700 dark:text-gray-200';
     chip.innerHTML = `${chipLabel}: ${artist} <span aria-hidden="true">&times;</span>`;
     chip.addEventListener('click', () => activate(''));
     chipContainer.appendChild(chip);
