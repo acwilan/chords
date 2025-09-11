@@ -2,6 +2,11 @@ name: Release
 
 on:
   workflow_dispatch:
+    inputs:
+      release_version:
+        description: 'Version to release (semver or major/minor/patch)'
+        required: true
+        default: patch
 
 permissions:
   contents: write
@@ -24,7 +29,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-      - run: npm run release
+      - run: npm run release -- -r ${{ inputs.release_version }}
       - name: Get release version
         run: |
           version=$(node -p "require('./package.json').version")
