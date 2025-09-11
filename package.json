@@ -11,7 +11,9 @@
     "test": "vitest run",
     "test:watch": "vitest --watch",
     "changelog": "standard-version --skip.tag",
-    "release": "standard-version"
+    "release": "standard-version",
+    "content:fetch": "bash scripts/fetch-content.sh",
+    "content:clean": "rm -rf tmp && git clean -fdX src/content/songs public/charts"
   },
   "engines": {
     "node": ">=20.0.0"

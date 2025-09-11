@@ -7,6 +7,14 @@ This repository hosts the source code for the chords site.
 - GitHub repository: `acwilan/chords`
 - Published site: https://acwilan.github.io/chords
 
+## External Content
+
+Song metadata and charts can be fetched from an external bundle. Copy `.env.example` to `.env` and adjust variables if necessary.
+
+Run `npm run content:fetch` to download the bundle and populate `src/content/songs` and `public/charts`.
+Use `npm run content:clean` to remove fetched files.
+
+
 ## Adding new songs
 
 1. Add an `.md` file in `src/content/songs/` with the song's frontmatter.
