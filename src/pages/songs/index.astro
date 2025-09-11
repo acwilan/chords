@@ -147,7 +147,9 @@ const url = `${base}${locale === 'en' ? 'en/' : ''}songs/`;
               data-tag={tag.toLowerCase()}
               aria-pressed={initialTag === tag.toLowerCase() ? 'true' : 'false'}
               class={`tag-pill flex items-center gap-1 px-3 py-1 text-sm ${
-                initialTag === tag.toLowerCase() ? 'bg-primary text-white' : ''
+                initialTag === tag.toLowerCase()
+                  ? 'bg-primary text-white dark:bg-primary dark:text-white'
+                  : ''
               }`}
             >
               <span>{tag}</span>
@@ -319,7 +321,9 @@ const url = `${base}${locale === 'en' ? 'en/' : ''}songs/`;
         const isActive = btn.dataset.tag === tag;
         btn.setAttribute('aria-pressed', String(isActive));
         btn.classList.toggle('bg-primary', isActive);
+        btn.classList.toggle('dark:bg-primary', isActive);
         btn.classList.toggle('text-white', isActive);
+        btn.classList.toggle('dark:text-white', isActive);
       });
       if (tag) {
         localStorage.setItem(TAG_STORAGE_KEY, tag);
