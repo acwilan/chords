@@ -19,6 +19,10 @@ jobs:
           cache: 'npm'
       - run: npm ci
       - run: npm test
+      - name: Configure Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
       - run: npm run release
       - run: git push --follow-tags origin main
         env:
