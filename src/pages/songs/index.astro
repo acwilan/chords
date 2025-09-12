@@ -4,7 +4,6 @@ import { getCollection } from 'astro:content';
 import { getLocaleFromUrl, createT } from '../../utils/i18n';
 import artistFilterScript from '../../scripts/artistFilter.js?url';
 import { buildSeo } from '../../utils/seo';
-import { slugify } from '../../utils/urls';
 
 const base = import.meta.env.BASE_URL.endsWith('/')
   ? import.meta.env.BASE_URL
@@ -14,7 +13,7 @@ const t = createT(locale);
 const all = await getCollection('songs');
 const map = new Map();
 for (const entry of all) {
-  const baseSlug = entry.data.slug || slugify(entry.data.title);
+  const baseSlug = entry.slug;
   const lang = entry.data.lang;
   const group = map.get(baseSlug) || {};
   group[lang] = entry;
