@@ -32,6 +32,24 @@ Set `PUBLIC_GSC_VERIFICATION` in:
 
 The tag will render only when a value is provided.
 
+## Sitemap
+
+The sitemap is generated automatically at build time using the
+`@astrojs/sitemap` integration. It includes only canonical routes and omits
+alias paths such as `/chords`, `/acordes` and `/cifrados`.
+
+Forks can update the `site` and `base` values in `astro.config.mjs` to point to
+their own URLs.
+
+The sitemap is generated only during `astro build`. Running `astro dev` will
+return a 404 for `/sitemap-index.xml`. To preview the sitemap locally, run
+`npm run build && npm run preview` and visit
+`http://localhost:4321/chordbook/sitemap-index.xml`.
+
+After deployment, submit the sitemap URL (e.g.
+`https://acwilan.github.io/chordbook/sitemap-index.xml`) in Google Search
+Console.
+
 ## Adding new songs
 
 1. Add an `.md` file in `src/content/songs/` with the song's frontmatter.
