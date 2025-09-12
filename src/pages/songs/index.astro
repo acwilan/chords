@@ -260,10 +260,14 @@ const seo = buildSeo({
     </div>
   </div>
   {initialArtist && (
-    <script is:inline>window.activeArtist = {JSON.stringify(initialArtist)};</script>
+    <script is:inline>
+      window.activeArtist = ${JSON.stringify(initialArtist)};
+    </script>
   )}
   {initialTag && (
-    <script is:inline>window.activeTag = {JSON.stringify(initialTag)};</script>
+    <script is:inline>
+      window.activeTag = ${JSON.stringify(initialTag)};
+    </script>
   )}
   <script id="artist-data" type="application/json">
     {JSON.stringify(artists)}
