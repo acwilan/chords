@@ -1,7 +1,7 @@
 {
   "site": {
     "title": "ChordBook",
-    "tagline": "Cifras para canciones de adoración"
+    "tagline": "Cifrados para canciones"
   },
   "nav": {
     "home": "Inicio",
@@ -10,11 +10,11 @@
   },
   "home": {
     "browseSongs": "Ver canciones",
-    "intro": "Cifras en PDF para canciones de adoración"
+    "intro": "Cifrados en PDF para canciones"
   },
   "songs": {
     "title": "Canciones",
-    "description": "Buscar y explorar cifras de canciones de adoración",
+    "description": "Buscar y explorar cifras de canciones",
     "searchPlaceholder": "Buscar canciones",
     "searchTip": "Presiona '/' para enfocar la búsqueda. Presiona 'Esc' para limpiar la búsqueda o el filtro de artista.",
     "count": "{count} canciones",
@@ -33,7 +33,7 @@
       "openPdf": "Abrir PDF",
       "goBack": "Volver",
     "linkOtherLang": "Ver en {lang}",
-    "chartFor": "Cifra para {title}"
+    "chartFor": "Cifrado para {title}"
   },
   "changelog": {
     "title": "Registro de cambios"

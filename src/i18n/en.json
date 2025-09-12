@@ -1,7 +1,7 @@
 {
   "site": {
     "title": "ChordBook",
-    "tagline": "Chord charts for worship songs"
+    "tagline": "Chord charts for songs"
   },
   "nav": {
     "home": "Home",
@@ -10,11 +10,11 @@
   },
   "home": {
     "browseSongs": "Browse songs",
-    "intro": "Chord charts in PDF for worship songs"
+    "intro": "Chord charts in PDF for songs"
   },
   "songs": {
     "title": "Songs",
-    "description": "Browse and search chord charts for worship songs",
+    "description": "Browse and search chord charts for songs",
     "searchPlaceholder": "Search songs",
     "searchTip": "Press '/' to focus search. Press 'Esc' to clear search or artist filter.",
       "count": "{count} songs",
