@@ -1,11 +1,11 @@
-# chords
+# ChordBook
 
-This repository hosts the source code for the chords site.
+This repository hosts the source code for the ChordBook site.
 
 ## Repository and deployment
 
-- GitHub repository: `acwilan/chords`
-- Published site: https://acwilan.github.io/chords
+- GitHub repository: `acwilan/chordbook`
+- Published site: https://acwilan.github.io/chordbook
 
 ## External Content
 

@@ -1,7 +1,7 @@
 {
-  "name": "Chords",
-  "short_name": "Chords",
-  "start_url": "/",
+  "name": "ChordBook",
+  "short_name": "ChordBook",
+  "start_url": "/chordbook/",
   "display": "minimal-ui",
   "background_color": "#ffffff",
   "theme_color": "#111827",
