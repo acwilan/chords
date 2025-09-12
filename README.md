@@ -26,7 +26,7 @@ Use `npm run content:clean` to remove fetched files.
 ## Adding new songs
 
 1. Add an `.md` file in `src/content/songs/` with the song's frontmatter.
-2. Provide `slug`, `lang` (`es` or `en`), `title` and optional fields like `key`, `bpm`, `artist`, `author`, `tags` and `pdf`.
+2. Provide `slug`, `lang` (`es` or `en`), `title` and optional fields like `key`, `bpm`, `artist`, `author`, `tags`, `pdf`, and `seoKeywords`.
    The `pdf` value may be just the filename (`Mi-Cancion.pdf`), an absolute path (`/charts/Mi-Cancion.pdf`),
    or a path including the normalized artist name (`/charts/sixpence-none-the-richer/Kiss-Me.pdf`).
    The `artist` field is used to build the artist filter on the songs page.
@@ -42,6 +42,12 @@ Use `npm run content:clean` to remove fetched files.
 
 - `artist` and `author` are optional metadata fields.
 - `capo` is no longer supported.
+
+## SEO
+
+- Each song has a canonical route at `/songs/{slug}/`. Keyword aliases (`/songs/{slug}/chords`, `/songs/{slug}/acordes`, `/songs/{slug}/cifrados`) render the same content but set `rel="canonical"` to the base route. Only canonical URLs appear in `sitemap.xml`.
+- Add optional `seoKeywords` in a song's frontmatter to append custom keywords to the defaults (`chords`, `acordes`, `cifrados`, artist, key).
+- Alias routes exist solely for discoverability and are excluded from the sitemap.
 
 ## Artist filter
 
