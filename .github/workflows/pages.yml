@@ -22,6 +22,7 @@ jobs:
       CONTENT_VERSION: ${{ vars.CONTENT_VERSION || 'v0.1.0' }}
       CONTENT_FILENAME: ${{ vars.CONTENT_FILENAME || 'content.zip' }}
       CONTENT_SHA256: ${{ vars.CONTENT_SHA256 || '' }}
+      PUBLIC_GSC_VERIFICATION: ${{ vars.PUBLIC_GSC_VERIFICATION || '' }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4

@@ -17,9 +17,11 @@ const pathWithoutLocale = locale === 'en' ? relative.replace(/^en\//, '') : rela
 const altEs = `${base}${pathWithoutLocale}`;
 const altEn = `${base}en/${pathWithoutLocale}`;
 const year = new Date().getFullYear();
+const gsc = import.meta.env.PUBLIC_GSC_VERIFICATION;
 ---
 <html lang={locale} data-base={base} class="h-full">
   <head>
+    {gsc && <meta name="google-site-verification" content={gsc} />}
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="color-scheme" content="light dark" />
