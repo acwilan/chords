@@ -75,6 +75,8 @@ Console.
 - Each song has a canonical route at `/songs/{slug}/`. Keyword aliases (`/songs/{slug}/chords`, `/songs/{slug}/acordes`, `/songs/{slug}/cifrados`) render the same content but set `rel="canonical"` to the base route. Only canonical URLs appear in `sitemap.xml`.
 - Add optional `seoKeywords` in a song's frontmatter to append custom keywords to the defaults (`chords`, `acordes`, `cifrados`, artist, key).
 - Alias routes exist solely for discoverability and are excluded from the sitemap.
+- Submit `https://acwilan.github.io/chordbook/sitemap.xml` to search engines.
+- If GSC still errors, submit the child file `https://acwilan.github.io/chordbook/sitemap-0.xml`.
 
 ## Artist filter
 

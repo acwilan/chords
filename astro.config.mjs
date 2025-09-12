@@ -8,14 +8,10 @@ export default defineConfig({
   integrations: [
     tailwind(),
     sitemap({
-      filter: (page) => {
-        const { pathname } = new URL(page);
-        const path = pathname.replace(/^\/chordbook/, '');
-        return (
-          /^\/(en\/)?($|songs\/(?:[^/]+\/?)?|changelog\/?$)/.test(path) &&
-          !/(\/(chords|acordes|cifrados)(\/?)$)/.test(path)
-        );
-      },
+      filter: (page) =>
+        !page.includes('/chords') &&
+        !page.includes('/acordes') &&
+        !page.includes('/cifrados'),
     }),
   ],
 });
