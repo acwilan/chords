@@ -1,6 +1,7 @@
 ---
 import App from '../layouts/App.astro';
 import { getLocaleFromUrl, createT } from '../utils/i18n';
+import { buildSeo } from '../utils/seo';
 
 const base = import.meta.env.BASE_URL.endsWith('/')
   ? import.meta.env.BASE_URL
@@ -8,16 +9,34 @@ const base = import.meta.env.BASE_URL.endsWith('/')
 const locale = getLocaleFromUrl(Astro.url.pathname, base);
 const t = createT(locale);
 const description = t('home.intro');
-const url = locale === 'en' ? `${base}en/` : base;
+const site = Astro.site ? Astro.site.toString().replace(/\/$/, '') : '';
+const url = locale === 'en' ? `${site}${base}en/` : `${site}${base}`;
+const alternate = { en: `${site}${base}en/`, es: `${site}${base}` };
+const seo = buildSeo({
+  title: t('site.title'),
+  description,
+  url,
+  locale,
+  alternate,
+});
 ---
 <App>
   <Fragment slot="head">
-    <title>{t('site.title')}</title>
-    <meta name="description" content={description} />
-    <meta property="og:title" content={t('site.title')} />
-    <meta property="og:description" content={description} />
-    <meta property="og:type" content="website" />
-    <meta property="og:url" content={url} />
+    <title>{seo.title}</title>
+    <meta name="description" content={seo.description} />
+    <meta property="og:title" content={seo.title} />
+    <meta property="og:description" content={seo.description} />
+    <meta property="og:type" content={seo.type} />
+    <meta property="og:url" content={seo.url} />
+    <meta property="og:site_name" content="ChordBook" />
+    <meta property="og:locale" content={seo.locale} />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content={seo.title} />
+    <meta name="twitter:description" content={seo.description} />
+    <link rel="canonical" href={seo.url} />
+    {Object.entries(seo.alternate).map(([lang, href]) => (
+      <link rel="alternate" hreflang={lang} href={href} />
+    ))}
   </Fragment>
   <section class="not-prose flex min-h-[60vh] flex-col items-center justify-center py-24 text-center">
     <h1 class="text-5xl font-bold">{t('site.title')}</h1>

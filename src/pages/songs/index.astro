@@ -3,6 +3,8 @@ import App from '../../layouts/App.astro';
 import { getCollection } from 'astro:content';
 import { getLocaleFromUrl, createT } from '../../utils/i18n';
 import artistFilterScript from '../../scripts/artistFilter.js?url';
+import { buildSeo } from '../../utils/seo';
+import { slugify } from '../../utils/urls';
 
 const base = import.meta.env.BASE_URL.endsWith('/')
   ? import.meta.env.BASE_URL
@@ -12,7 +14,7 @@ const t = createT(locale);
 const all = await getCollection('songs');
 const map = new Map();
 for (const entry of all) {
-  const baseSlug = entry.id.replace(/(\.(en|es))?\.md$/, '');
+  const baseSlug = entry.data.slug || slugify(entry.data.title);
   const lang = entry.data.lang;
   const group = map.get(baseSlug) || {};
   group[lang] = entry;
@@ -51,16 +53,34 @@ const initialCount = songs.filter((song) => {
   return matchesArtist && matchesTag;
 }).length;
 const description = t('songs.description');
-const url = `${base}${locale === 'en' ? 'en/' : ''}songs/`;
+const site = Astro.site ? Astro.site.toString().replace(/\/$/, '') : '';
+const url = `${site}${base}${locale === 'en' ? 'en/' : ''}songs/`;
+const alternate = { en: `${site}${base}en/songs/`, es: `${site}${base}songs/` };
+const seo = buildSeo({
+  title: t('songs.title'),
+  description,
+  url,
+  locale,
+  alternate,
+});
 ---
 <App>
   <Fragment slot="head">
-    <title>{t('songs.title')}</title>
-    <meta name="description" content={description} />
-    <meta property="og:title" content={t('songs.title')} />
-    <meta property="og:description" content={description} />
-    <meta property="og:type" content="website" />
-    <meta property="og:url" content={url} />
+    <title>{seo.title}</title>
+    <meta name="description" content={seo.description} />
+    <meta property="og:title" content={seo.title} />
+    <meta property="og:description" content={seo.description} />
+    <meta property="og:type" content={seo.type} />
+    <meta property="og:url" content={seo.url} />
+    <meta property="og:site_name" content="ChordBook" />
+    <meta property="og:locale" content={seo.locale} />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content={seo.title} />
+    <meta name="twitter:description" content={seo.description} />
+    <link rel="canonical" href={seo.url} />
+    {Object.entries(seo.alternate).map(([lang, href]) => (
+      <link rel="alternate" hreflang={lang} href={href} />
+    ))}
   </Fragment>
   <h1>{t('songs.title')}</h1>
   <div class="md:flex md:gap-4">
@@ -240,10 +260,14 @@ const url = `${base}${locale === 'en' ? 'en/' : ''}songs/`;
     </div>
   </div>
   {initialArtist && (
-    <script is:inline>window.activeArtist = {JSON.stringify(initialArtist)};</script>
+    <script is:inline>
+      window.activeArtist = ${JSON.stringify(initialArtist)};
+    </script>
   )}
   {initialTag && (
-    <script is:inline>window.activeTag = {JSON.stringify(initialTag)};</script>
+    <script is:inline>
+      window.activeTag = ${JSON.stringify(initialTag)};
+    </script>
   )}
   <script id="artist-data" type="application/json">
     {JSON.stringify(artists)}

@@ -1,13 +1,15 @@
 ---
-import App from '../../layouts/App.astro';
+import App from '../../../layouts/App.astro';
 import { getCollection } from 'astro:content';
-import { getLocaleFromUrl, createT } from '../../utils/i18n';
-import { pdfPath } from '../../utils/pdfPath';
+import { getLocaleFromUrl, createT, type Locale } from '../../../utils/i18n';
+import { pdfPath } from '../../../utils/pdfPath';
+import { buildSeo, songJsonLd } from '../../../utils/seo';
+import { buildSongUrls, slugify } from '../../../utils/urls';
 
 export async function getStaticPaths() {
   const songs = await getCollection('songs');
   const slugs = Array.from(
-    new Set(songs.map((s) => s.id.replace(/(\.(en|es))?\.md$/, '')))
+    new Set(songs.map((s) => s.data.slug || slugify(s.data.title)))
   );
   return slugs.map((slug) => ({ params: { slug } }));
 }
@@ -19,14 +21,13 @@ const locale = getLocaleFromUrl(Astro.url.pathname, base);
 const t = createT(locale);
 const slug = Astro.params.slug;
 const songs = await getCollection('songs');
-const entries = songs.filter(
-  (s) => s.id.replace(/(\.(en|es))?\.md$/, '') === slug
-);
+const getSlug = (s: any) => s.data.slug || slugify(s.data.title);
+const entries = songs.filter((s) => getSlug(s) === slug);
 if (entries.length === 0) {
   throw new Error(`Song not found: ${slug}`);
 }
 const song = entries.find((e) => e.data.lang === locale) || entries[0];
-const otherLocale = locale === 'en' ? 'es' : 'en';
+const otherLocale: Locale = locale === 'en' ? 'es' : 'en';
 const otherEntry = entries.find((e) => e.data.lang === otherLocale);
 const otherLink = otherEntry
   ? `${base}${otherLocale === 'en' ? 'en/' : ''}songs/${slug}/`
@@ -36,17 +37,55 @@ const { Content } = await song.render();
 const rawPdf = song.data.pdf && pdfPath(song.data.pdf);
 const pdf =
   rawPdf && (rawPdf.startsWith('http') ? rawPdf : `${base}${rawPdf.replace(/^\//, '')}`);
-const url = `${base}${locale === 'en' ? 'en/' : ''}songs/${slug}/`;
-const description = t('songs.chartFor', { title: song.data.title });
+const site = Astro.site ? Astro.site.toString().replace(/\/$/, '') : '';
+const urls = buildSongUrls({ site, base, locale, slug });
+const availableLocales = entries.map((e) => e.data.lang as Locale);
+const alternate: Record<string, string> = {};
+for (const loc of availableLocales) {
+  alternate[loc] = buildSongUrls({ site, base, locale: loc, slug }).canonical;
+}
+const seo = buildSeo({
+  title: song.data.title,
+  artist: song.data.artist,
+  key: song.data.key,
+  seoKeywords: song.data.seoKeywords,
+  url: urls.canonical,
+  locale,
+  type: 'article',
+  alternate,
+});
+const jsonLd = songJsonLd({
+  title: song.data.title,
+  artist: song.data.artist,
+  author: song.data.author,
+  locale,
+  keywords: seo.keywords,
+  url: urls.canonical,
+  pdf,
+  site,
+  base,
+  slug,
+});
 ---
 <App>
   <Fragment slot="head">
-    <title>{song.data.title}</title>
-    <meta name="description" content={description} />
-    <meta property="og:title" content={song.data.title} />
-    <meta property="og:description" content={description} />
-    <meta property="og:type" content="article" />
-    <meta property="og:url" content={url} />
+    <title>{seo.title}</title>
+    <meta name="description" content={seo.description} />
+    <meta name="keywords" content={seo.keywords.join(', ')} />
+    <meta property="og:title" content={seo.title} />
+    <meta property="og:description" content={seo.description} />
+    <meta property="og:type" content={seo.type} />
+    <meta property="og:url" content={seo.url} />
+    <meta property="og:site_name" content="ChordBook" />
+    <meta property="og:locale" content={seo.locale} />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content={seo.title} />
+    <meta name="twitter:description" content={seo.description} />
+    <link rel="canonical" href={seo.url} />
+    {Object.entries(seo.alternate).map(([lang, href]) => (
+      <link rel="alternate" hreflang={lang} href={href} />
+    ))}
+    <script type="application/ld+json">{JSON.stringify(jsonLd)}</script>
   </Fragment>
   <header class="mb-8 border-b pb-4">
     <h1 class="mb-2 text-3xl font-bold">{song.data.title}</h1>
