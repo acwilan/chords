@@ -23,6 +23,15 @@ Run `npm run content:fetch` to download the bundle and populate `src/content/son
 Use `npm run content:clean` to remove fetched files.
 
 
+## Google Search Console
+
+Set `PUBLIC_GSC_VERIFICATION` in:
+
+- local `.env` for dev, and/or
+- GitHub repo "Variables" for CI (Settings → Secrets and variables → Actions → Variables).
+
+The tag will render only when a value is provided.
+
 ## Adding new songs
 
 1. Add an `.md` file in `src/content/songs/` with the song's frontmatter.
