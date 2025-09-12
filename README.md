@@ -41,6 +41,10 @@ alias paths such as `/chords`, `/acordes` and `/cifrados`.
 Forks can update the `site` and `base` values in `astro.config.mjs` to point to
 their own URLs.
 
+During local development, the `base` setting is ignored; access the sitemap at
+`http://localhost:4321/sitemap-index.xml` rather than under the `/chordbook`
+prefix.
+
 After deployment, submit the sitemap URL (e.g.
 `https://acwilan.github.io/chordbook/sitemap-index.xml`) in Google Search
 Console.
