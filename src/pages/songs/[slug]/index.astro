@@ -4,13 +4,11 @@ import { getCollection } from 'astro:content';
 import { getLocaleFromUrl, createT, type Locale } from '../../../utils/i18n';
 import { pdfPath } from '../../../utils/pdfPath';
 import { buildSeo, songJsonLd } from '../../../utils/seo';
-import { buildSongUrls, slugify } from '../../../utils/urls';
+import { buildSongUrls } from '../../../utils/urls';
 
 export async function getStaticPaths() {
   const songs = await getCollection('songs');
-  const slugs = Array.from(
-    new Set(songs.map((s) => s.data.slug || slugify(s.data.title)))
-  );
+  const slugs = Array.from(new Set(songs.map((s) => s.slug)));
   return slugs.map((slug) => ({ params: { slug } }));
 }
 
@@ -21,8 +19,7 @@ const locale = getLocaleFromUrl(Astro.url.pathname, base);
 const t = createT(locale);
 const slug = Astro.params.slug;
 const songs = await getCollection('songs');
-const getSlug = (s: any) => s.data.slug || slugify(s.data.title);
-const entries = songs.filter((s) => getSlug(s) === slug);
+const entries = songs.filter((s) => s.slug === slug);
 if (entries.length === 0) {
   throw new Error(`Song not found: ${slug}`);
 }
